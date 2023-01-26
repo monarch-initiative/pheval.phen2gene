@@ -8,6 +8,13 @@ packages = [{include = "pheval_phen2gene", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pheval = {path = "/Users/yaseminbridges/Documents/GitHub/pheval"}
+
+[tool.poetry.scripts]
+pheval-phen2gene = "pheval_phen2gene.cli:main"
+
+[tool.poetry.plugins."pheval.plugins"]
+phen2gene = "pheval_phen2gene.runner:Phen2GenePhEvalRunner"
 
 
 [build-system]
