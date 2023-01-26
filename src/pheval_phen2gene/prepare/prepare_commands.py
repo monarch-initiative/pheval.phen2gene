@@ -229,7 +229,7 @@ def write_docker_commands(
 
 def prepare_commands(
         environment: str,
-        command_file_path: Path,
+        file_prefix: str,
         output_dir: Path,
         phenopacket_dir: Path or None = None,
         input_dir: Path or None = None,
@@ -237,9 +237,15 @@ def prepare_commands(
 ) -> None:
     """Prepare all commands to run with Phen2Gene."""
     try:
-        command_file_path.parents[0].mkdir()
+        output_dir.mkdir()
+        # command_file_path.parents[0].mkdir()
     except FileExistsError:
         pass
+    try:
+        output_dir.joinpath("phen2gene_batch_files").mkdir()
+    except FileExistsError:
+        pass
+    command_file_path = output_dir.joinpath(f"phen2gene_batch_files/{file_prefix}-phen2gene_batch.txt")
     if environment == "local":
         write_local_commands(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
@@ -312,20 +318,10 @@ def prepare_commands(
     type=Path,
     help="Path to the output directory.",
 )
-@click.option(
-    "--results-dir",
-    "-r",
-    required=False,
-    metavar="PATH",
-    type=Path,
-    help="Path to the desired results directory.",
-    default="./results",
-)
 def prepare_commands_command(
         environment: str,
         file_prefix: str,
         output_dir: Path,
-        results_dir: Path,
         phen2gene_py: Path or None = None,
         phenopacket_dir: Path = None,
         input_dir: Path = None,
@@ -334,8 +330,8 @@ def prepare_commands_command(
     or a prepared set of inputs."""
     prepare_commands(
         environment=environment,
-        command_file_path=output_dir.joinpath(file_prefix + "-phen2gene-commands.txt"),
-        output_dir=results_dir,
+        file_prefix=file_prefix,
+        output_dir=output_dir,
         phenopacket_dir=phenopacket_dir,
         input_dir=input_dir,
         path_to_phen2gene_dir=phen2gene_py,
