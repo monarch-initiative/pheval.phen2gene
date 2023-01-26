@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "pheval-phen2gene"
+version = "0.1.0"
+description = ""
+authors = ["Yasemin Bridges <y.bridges@qmul.ac.uk>"]
+readme = "README.md"
+packages = [{include = "pheval_phen2gene", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
