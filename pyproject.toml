@@ -9,6 +9,7 @@ packages = [{include = "pheval_phen2gene", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 pheval = {path = "/Users/yaseminbridges/Documents/GitHub/pheval"}
+pyserde = "^0.9.7"
 
 [tool.poetry.scripts]
 pheval-phen2gene = "pheval_phen2gene.cli:main"

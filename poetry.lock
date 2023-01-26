@@ -133,6 +133,14 @@ tests = ["coverage", "more-itertools", "pytest"]
 web = ["bootstrap-flask (<=2.0.0)", "flasgger", "flask", "markdown", "pyyaml", "rdflib", "rdflib-jsonld"]
 
 [[package]]
+name = "casefy"
+version = "0.1.7"
+description = "Utilities for string case conversion."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "certifi"
 version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -808,6 +816,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "mypy-extensions"
+version = "0.4.3"
+description = "Experimental type system extensions for programs checked with the mypy typechecker."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "myst-parser"
 version = "0.18.1"
 description = "An extended commonmark compliant parser, with bridges to docutils & sphinx."
@@ -1191,6 +1207,27 @@ description = "Persistent/Functional/Immutable data structures"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "pyserde"
+version = "0.9.7"
+description = "Yet another serialization library on top of dataclasses"
+category = "main"
+optional = false
+python-versions = ">=3.7.0,<4.0.0"
+
+[package.dependencies]
+casefy = "*"
+jinja2 = "*"
+typing_inspect = ">=0.4.0"
+
+[package.extras]
+all = ["msgpack", "numpy (>1.21.0)", "numpy (>1.21.0)", "numpy (>1.21.0)", "numpy (>1.22.0)", "orjson", "pyyaml", "tomli", "tomli-w"]
+msgpack = ["msgpack"]
+numpy = ["numpy (>1.21.0)", "numpy (>1.21.0)", "numpy (>1.21.0)", "numpy (>1.22.0)"]
+orjson = ["orjson"]
+toml = ["tomli", "tomli-w"]
+yaml = ["pyyaml"]
 
 [[package]]
 name = "pyshex"
@@ -1828,6 +1865,18 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "typing-inspect"
+version = "0.8.0"
+description = "Runtime inspection utilities for typing module."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+mypy-extensions = ">=0.3.0"
+typing-extensions = ">=3.7.4"
+
+[[package]]
 name = "uri-template"
 version = "1.2.0"
 description = "RFC 6570 URI Template Processor"
@@ -1936,7 +1985,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "b741f4920ccbe4cfa70d19269accb547ef264b229546489ad8ef04c60c5a4eab"
+content-hash = "a5c9f2932273c27820784900e7ca5bb3977dcc7354bb24a623e21e771388deed"
 
 [metadata.files]
 aiohttp = [
@@ -2001,6 +2050,10 @@ beautifulsoup4 = [
 bioregistry = [
     {file = "bioregistry-0.5.143-py3-none-any.whl", hash = "sha256:70e0221fae09bf3aa47799a8bfb592d42d95d6a2df4924ce10dfe40cc294150e"},
     {file = "bioregistry-0.5.143.tar.gz", hash = "sha256:15e2beb3a7d53fa81abbf0339762fcec59f7ba5a1ac219f2c247e04c3eaa8007"},
+]
+casefy = [
+    {file = "casefy-0.1.7-py3-none-any.whl", hash = "sha256:ab05ff1c67f2a8e62d9f8986fa9a849416d61ac5413ec57d1f827b4f36589cf6"},
+    {file = "casefy-0.1.7.tar.gz", hash = "sha256:6accce985a64b9edb2a610a29ac489d78fac80e52ff8f2d137e294f2f92b8027"},
 ]
 certifi = [
     {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
@@ -2532,6 +2585,10 @@ multidict = [
     {file = "multidict-6.0.4-cp39-cp39-win_amd64.whl", hash = "sha256:33029f5734336aa0d4c0384525da0387ef89148dc7191aae00ca5fb23d7aafc2"},
     {file = "multidict-6.0.4.tar.gz", hash = "sha256:3666906492efb76453c0e7b97f2cf459b0682e7402c0489a95484965dbc1da49"},
 ]
+mypy-extensions = [
+    {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
+    {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
+]
 myst-parser = [
     {file = "myst-parser-0.18.1.tar.gz", hash = "sha256:79317f4bb2c13053dd6e64f9da1ba1da6cd9c40c8a430c447a7b146a594c246d"},
     {file = "myst_parser-0.18.1-py3-none-any.whl", hash = "sha256:61b275b85d9f58aa327f370913ae1bec26ebad372cc99f3ab85c8ec3ee8d9fb8"},
@@ -2770,6 +2827,10 @@ pyrsistent = [
     {file = "pyrsistent-0.19.3-cp39-cp39-win_amd64.whl", hash = "sha256:878433581fc23e906d947a6814336eee031a00e6defba224234169ae3d3d6a98"},
     {file = "pyrsistent-0.19.3-py3-none-any.whl", hash = "sha256:ccf0d6bd208f8111179f0c26fdf84ed7c3891982f2edaeae7422575f47e66b64"},
     {file = "pyrsistent-0.19.3.tar.gz", hash = "sha256:1a2994773706bbb4995c31a97bc94f1418314923bd1048c6d964837040376440"},
+]
+pyserde = [
+    {file = "pyserde-0.9.7-py3-none-any.whl", hash = "sha256:dae7c92793d4306577b84990b866db7cee8dd5d7a22f3afd174f7d7b5116a38b"},
+    {file = "pyserde-0.9.7.tar.gz", hash = "sha256:76d8c85ecaac943ee6f0b5104e6bc977afb79a0f3d17343d279b62530b7849db"},
 ]
 pyshex = [
     {file = "PyShEx-0.8.1-py3-none-any.whl", hash = "sha256:6da1b10123e191abf8dcb6bf3e54aa3e1fcf771df5d1a0ed453217c8900c8e6a"},
@@ -3074,6 +3135,10 @@ tqdm = [
 typing-extensions = [
     {file = "typing_extensions-4.4.0-py3-none-any.whl", hash = "sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e"},
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
+]
+typing-inspect = [
+    {file = "typing_inspect-0.8.0-py3-none-any.whl", hash = "sha256:5fbf9c1e65d4fa01e701fe12a5bca6c6e08a4ffd5bc60bfac028253a447c5188"},
+    {file = "typing_inspect-0.8.0.tar.gz", hash = "sha256:8b1ff0c400943b6145df8119c41c244ca8207f1f10c9c057aeed1560e4806e3d"},
 ]
 uri-template = [
     {file = "uri_template-1.2.0-py3-none-any.whl", hash = "sha256:f1699c77b73b925cf4937eae31ab282a86dc885c333f2e942513f08f691fc7db"},
