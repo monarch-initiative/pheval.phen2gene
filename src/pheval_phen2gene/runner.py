@@ -4,6 +4,9 @@ from pathlib import Path
 
 from pheval.runners.runner import PhEvalRunner
 
+from pheval_phen2gene.phen2gene_config_parser import parse_phen2gene_config
+from pheval_phen2gene.run.run import prepare_phen2gene_commands, run_phen2gene_local
+
 
 @dataclass
 class Phen2GenePhEvalRunner(PhEvalRunner):
@@ -22,6 +25,9 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
     def run(self):
         """run"""
         print("running with phen2gene")
+        config = parse_phen2gene_config(self.config_file)
+        prepare_phen2gene_commands(config=config, output_dir=self.output_dir, testdata_dir=self.testdata_dir)
+        run_phen2gene_local(testdata_dir=self.testdata_dir, output_dir=self.output_dir)
 
     def post_process(self):
         """post_process"""
