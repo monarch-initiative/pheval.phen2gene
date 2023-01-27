@@ -27,11 +27,12 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         """run"""
         print("running with phen2gene")
         config = parse_phen2gene_config(self.config_file)
-        prepare_phen2gene_commands(config=config, output_dir=self.output_dir, testdata_dir=self.testdata_dir)
+        prepare_phen2gene_commands(
+            config=config, output_dir=self.output_dir, testdata_dir=self.testdata_dir
+        )
         run_phen2gene_local(testdata_dir=self.testdata_dir, output_dir=self.output_dir)
 
     def post_process(self):
         """post_process"""
         print("post processing")
-        post_process_results_format(testdata_dir=self.testdata_dir,
-                                    output_dir=self.output_dir)
+        post_process_results_format(testdata_dir=self.testdata_dir, output_dir=self.output_dir)

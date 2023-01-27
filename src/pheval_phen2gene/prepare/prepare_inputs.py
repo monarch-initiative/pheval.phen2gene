@@ -1,11 +1,13 @@
 from pathlib import Path
 
+from phenopackets import PhenotypicFeature
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader
-from phenopackets import PhenotypicFeature
 
 
-def write_hpo_ids_to_output_file(output_file: Path, phenotypic_profile: [PhenotypicFeature]) -> None:
+def write_hpo_ids_to_output_file(
+    output_file: Path, phenotypic_profile: [PhenotypicFeature]
+) -> None:
     """Write a list of HPO ids to a new text file for input into Phen2Gene."""
     with open(output_file, "w") as output:
         output.write("\n".join([hpo.type.id for hpo in phenotypic_profile]))

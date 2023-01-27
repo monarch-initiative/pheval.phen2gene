@@ -5,6 +5,7 @@ import yaml
 from serde import serde
 from serde.yaml import from_yaml
 
+
 @serde
 @dataclass
 class Phen2GeneRun:

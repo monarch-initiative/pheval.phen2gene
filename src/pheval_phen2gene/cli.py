@@ -1,6 +1,10 @@
 import click
 
-from pheval_phen2gene.cli_phen2gene import prepare_input_command, prepare_inputs_command, prepare_commands_command
+from pheval_phen2gene.cli_phen2gene import (
+    prepare_commands_command,
+    prepare_input_command,
+    prepare_inputs_command,
+)
 
 
 @click.group()

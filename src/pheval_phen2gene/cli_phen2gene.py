@@ -14,15 +14,10 @@ from pheval_phen2gene.prepare.prepare_inputs import prepare_input, prepare_input
     required=True,
     metavar="FILE",
     help="Path to phenopacket.",
-    type=Path
+    type=Path,
 )
 @click.option(
-    "--output-dir",
-    "-o",
-    required=True,
-    metavar="PATH",
-    help="Path to output directory.",
-    type=Path
+    "--output-dir", "-o", required=True, metavar="PATH", help="Path to output directory.", type=Path
 )
 def prepare_input_command(phenopacket_path: Path, output_dir: Path):
     """Create the input file required for running Phen2Gene from a phenopacket."""
@@ -31,20 +26,10 @@ def prepare_input_command(phenopacket_path: Path, output_dir: Path):
 
 @click.command("prepare-inputs")
 @click.option(
-    "--phenopacket-dir",
-    "-p",
-    required=True,
-    metavar="FILE",
-    help="Path to phenopacket.",
-    type=Path
+    "--phenopacket-dir", "-p", required=True, metavar="FILE", help="Path to phenopacket.", type=Path
 )
 @click.option(
-    "--output-dir",
-    "-o",
-    required=True,
-    metavar="PATH",
-    help="Path to output directory.",
-    type=Path
+    "--output-dir", "-o", required=True, metavar="PATH", help="Path to output directory.", type=Path
 )
 def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
     """Create input files required for running Phen2Gene from phenopackets."""
@@ -97,7 +82,7 @@ def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
     help="Prefix of generated command file.",
     default="RUN",
     show_default=True,
-    type=str
+    type=str,
 )
 @click.option(
     "--results-dir",
@@ -116,14 +101,13 @@ def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
     help="Path to the output directory for batch files.",
 )
 def prepare_commands_command(
-        environment: str,
-        file_prefix: str,
-        output_dir: Path,
-        results_dir: Path,
-        phen2gene_py: Path or None = None,
-        phenopacket_dir: Path = None,
-        input_dir: Path = None,
-
+    environment: str,
+    file_prefix: str,
+    output_dir: Path,
+    results_dir: Path,
+    phen2gene_py: Path or None = None,
+    phenopacket_dir: Path = None,
+    input_dir: Path = None,
 ) -> None:
     """Prepare a text file containing all commands to run Phen2Gene from either phenopackets
     or a prepared set of inputs."""
@@ -134,5 +118,5 @@ def prepare_commands_command(
         phenopacket_dir=phenopacket_dir,
         input_dir=input_dir,
         path_to_phen2gene_dir=phen2gene_py,
-        results_dir=results_dir
+        results_dir=results_dir,
     )
