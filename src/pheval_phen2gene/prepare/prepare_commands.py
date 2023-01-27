@@ -2,11 +2,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-import click
-from pheval.prepare.custom_exceptions import MutuallyExclusiveOptionError
 from pheval.utils.file_utils import all_files
-
-from pheval_phen2gene.prepare.prepare_inputs import extract_proband_hpo_ids
+from pheval.utils.phenopacket_utils import phenopacket_reader, PhenopacketUtil
 
 
 @dataclass
@@ -46,11 +43,12 @@ def create_command_line_arguments(
             input_file_path=input_file_path,
         )
     if input_file_path is None:
+        phenopacket = phenopacket_reader(phenopacket_path)
         return Phen2GeneCommandLineArguments(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
             output_dir=output_dir,
             output_file_name=output_file_name,
-            hpo_ids=extract_proband_hpo_ids(phenopacket_path),
+            hpo_ids=[hpo.type.id for hpo in PhenopacketUtil(phenopacket).observed_phenotypic_features()],
         )
 
 
@@ -68,10 +66,11 @@ def create_docker_arguments(
             input_file_path=input_file_path,
         )
     if input_file_path is None:
+        phenopacket = phenopacket_reader(phenopacket_path)
         return Phen2GeneDockerArguments(
             output_dir=output_dir,
             output_file_name=output_file_name,
-            hpo_ids=extract_proband_hpo_ids(phenopacket_path),
+            hpo_ids=[hpo.type.id for hpo in PhenopacketUtil(phenopacket).observed_phenotypic_features()],
         )
 
 
@@ -237,10 +236,7 @@ def prepare_commands(
         path_to_phen2gene_dir: Path or None = None,
 ) -> None:
     """Prepare all commands to run with Phen2Gene."""
-    try:
-        output_dir.joinpath("phen2gene_batch_files").mkdir()
-    except FileExistsError:
-        pass
+    output_dir.joinpath("phen2gene_batch_files").mkdir(parents=True, exist_ok=True)
     command_file_path = output_dir.joinpath(
         f"phen2gene_batch_files/{file_prefix}-phen2gene-batch.txt"
     )
@@ -259,89 +255,3 @@ def prepare_commands(
             phenopacket_dir=phenopacket_dir,
             input_dir=input_dir,
         )
-
-
-@click.command("prepare-commands")
-@click.option(
-    "--environment",
-    "-e",
-    required=False,
-    default="local",
-    show_default=True,
-    help="Environment to run commands.",
-    type=click.Choice(["local", "docker"]),
-)
-@click.option(
-    "--phenopacket-dir",
-    "-P",
-    cls=MutuallyExclusiveOptionError,
-    mutually_exclusive=["input_dir"],
-    required=False,
-    metavar="PATH",
-    type=Path,
-    help="Path to the phenopacket directory. ",
-)
-@click.option(
-    "--phen2gene-py",
-    "-s",
-    required=False,
-    metavar="PATH",
-    type=Path,
-    help="Full path to Phen2Gene python executable.",
-)
-@click.option(
-    "--input-dir",
-    "-i",
-    cls=MutuallyExclusiveOptionError,
-    mutually_exclusive=["phenopacket_dir"],
-    required=False,
-    metavar="PATH",
-    type=Path,
-    help="Path to the prepared input files for Phen2Gene. ",
-)
-@click.option(
-    "--file-prefix",
-    "-p",
-    required=False,
-    metavar="TEXT",
-    help="Prefix of generated command file.",
-    default="RUN",
-    show_default=True,
-)
-@click.option(
-    "--results-dir",
-    "-r",
-    required=True,
-    metavar="PATH",
-    type=Path,
-    help="Path to the results directory.",
-)
-@click.option(
-    "--output-dir",
-    "-o",
-    required=True,
-    metavar="PATH",
-    type=Path,
-    help="Path to the output directory.",
-)
-def prepare_commands_command(
-        environment: str,
-        file_prefix: str,
-        output_dir: Path,
-        results_dir: Path,
-        phen2gene_py: Path or None = None,
-        phenopacket_dir: Path = None,
-        input_dir: Path = None,
-
-) -> None:
-    """Prepare a text file containing all commands to run Phen2Gene from either phenopackets
-    or a prepared set of inputs."""
-    prepare_commands(
-        environment=environment,
-        file_prefix=file_prefix,
-        output_dir=output_dir,
-        phenopacket_dir=phenopacket_dir,
-        input_dir=input_dir,
-        path_to_phen2gene_dir=phen2gene_py,
-        results_dir=results_dir
-    )
