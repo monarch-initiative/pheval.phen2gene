@@ -11,7 +11,7 @@ def read_phen2gene_result(phen2gene_result: Path):
 
 
 class StandardisePhen2GeneResult:
-    def __init__(self, gene_result, gene_identifier_updater: GeneIdentifierUpdater):
+    def __init__(self, gene_result: pd.DataFrame, gene_identifier_updater: GeneIdentifierUpdater):
         self.gene_result = gene_result
         self.gene_identifier_updater = gene_identifier_updater
 
@@ -57,11 +57,8 @@ class StandardisePhen2GeneResult:
         return self.add_ranks(sorted_result)
 
 
-def create_standardised_results(output_dir, results_dir):
-    try:
-        output_dir.joinpath("pheval_gene_results/").mkdir()
-    except FileExistsError:
-        pass
+def create_standardised_results(output_dir: Path, results_dir: Path) -> None:
+    output_dir.joinpath("pheval_gene_results/").mkdir(exist_ok=True)
     hgnc_dict = create_hgnc_dict()
     gene_identifier_updater = GeneIdentifierUpdater(hgnc_dict, "ensembl_id")
     for result in all_files(results_dir):
