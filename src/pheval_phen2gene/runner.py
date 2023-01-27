@@ -5,6 +5,7 @@ from pathlib import Path
 from pheval.runners.runner import PhEvalRunner
 
 from pheval_phen2gene.phen2gene_config_parser import parse_phen2gene_config
+from pheval_phen2gene.post_process.post_process import post_process_results_format
 from pheval_phen2gene.run.run import prepare_phen2gene_commands, run_phen2gene_local
 
 
@@ -32,3 +33,5 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
     def post_process(self):
         """post_process"""
         print("post processing")
+        post_process_results_format(testdata_dir=self.testdata_dir,
+                                    output_dir=self.output_dir)
