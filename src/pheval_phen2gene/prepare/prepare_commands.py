@@ -122,7 +122,7 @@ class CommandWriter:
                     " --file "
                     + str(command_arguments.input_file_path)
                     + " -out "
-                    + str(command_arguments.output_dir)
+                    + "/phen2gene-results"
                     + " --name "
                     + str(command_arguments.output_file_name)
                     + "\n"
@@ -132,7 +132,7 @@ class CommandWriter:
                     " --manual "
                     + " ".join(command_arguments.hpo_ids)
                     + " -out "
-                    + str(command_arguments.output_dir)
+                    + "/phen2gene-results"
                     + " --name "
                     + str(command_arguments.output_file_name)
                     + "\n"
