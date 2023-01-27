@@ -23,6 +23,7 @@ from pheval_phen2gene.prepare.prepare_inputs import prepare_input, prepare_input
     type=Path
 )
 def prepare_input_command(phenopacket_path: Path, output_dir: Path):
+    """Create the input file required for running Phen2Gene from a phenopacket."""
     prepare_input(phenopacket_path=phenopacket_path, output_dir=output_dir)
 
 
@@ -44,4 +45,5 @@ def prepare_input_command(phenopacket_path: Path, output_dir: Path):
     type=Path
 )
 def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
+    """Create input files required for running Phen2Gene from phenopackets."""
     prepare_inputs(phenopacket_dir=phenopacket_dir, output_dir=output_dir)
