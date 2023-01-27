@@ -1,4 +1,5 @@
 import click
+from pheval_phen2gene.prepare.prepare_commands import prepare_commands
 
 
 @click.group()
