@@ -1,5 +1,5 @@
 # Phen2Gene Runner for PhEval
-This is the Exomiser plugin for PhEval. Highly experimental. Do not use.
+This is the Phen2Gene plugin for PhEval. Highly experimental. Do not use.
 
 ## Developers
 
