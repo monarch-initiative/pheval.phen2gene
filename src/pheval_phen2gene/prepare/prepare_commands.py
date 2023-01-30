@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader
@@ -13,7 +13,7 @@ class Phen2GeneCommandLineArguments:
     path_to_phen2gene_dir: Path
     output_dir: Path
     output_file_name: Path
-    input_file_path: Optional[Path] = None
+    input_file_path: [Path] = None
     hpo_ids: List[str] = None
 
 
@@ -23,7 +23,7 @@ class Phen2GeneDockerArguments:
 
     output_dir: Path
     output_file_name: Path
-    input_file_path: Optional[Path] = None
+    input_file_path: [Path] = None
     hpo_ids: List[str] = None
 
 
@@ -34,7 +34,7 @@ def create_command_line_arguments(
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
 ) -> Phen2GeneCommandLineArguments:
-    """Create the command line arguments required for Phen2Gene."""
+    """Create command line arguments required for Phen2Gene."""
     if phenopacket_path is None:
         return Phen2GeneCommandLineArguments(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
@@ -84,7 +84,7 @@ class CommandWriter:
     def __init__(self, output_file: Path):
         self.file = open(output_file, "a")
 
-    def write_local_command(self, command_arguments: Phen2GeneCommandLineArguments) -> None:
+    def write_local_command(self, command_arguments: Phen2GeneCommandLineArguments, data_dir) -> None:
         """Write a Phen2Gene command to run locally."""
         try:
             if command_arguments.hpo_ids is None:
@@ -97,6 +97,8 @@ class CommandWriter:
                     + str(command_arguments.output_dir)
                     + " --name "
                     + str(command_arguments.output_file_name)
+                    + " -d"
+                    + str(data_dir)
                     + "\n"
                 )
             if command_arguments.input_file_path is None:
@@ -109,6 +111,8 @@ class CommandWriter:
                     + str(command_arguments.output_dir)
                     + " --name "
                     + str(command_arguments.output_file_name)
+                    + " -d"
+                    + str(data_dir)
                     + "\n"
                 )
         except IOError:
@@ -148,6 +152,7 @@ def write_single_local_command(
     path_to_phen2gene_dir: Path,
     output_dir: Path,
     output_file_name: Path,
+    data_dir: Path,
     command_writer: CommandWriter,
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
@@ -160,7 +165,7 @@ def write_single_local_command(
         input_file_path=input_file_path,
         phenopacket_path=phenopacket_path,
     )
-    command_writer.write_local_command(arguments)
+    command_writer.write_local_command(arguments, data_dir)
 
 
 def write_single_docker_command(
@@ -184,6 +189,7 @@ def write_local_commands(
     path_to_phen2gene_dir: Path,
     command_file_path: Path,
     output_dir: Path,
+    data_dir: Path,
     phenopacket_dir: Path or None,
     input_dir: Path or None,
 ) -> None:
@@ -197,12 +203,14 @@ def write_local_commands(
             output_file_name=Path(input_file.stem),
             command_writer=command_writer,
             input_file_path=input_file,
+            data_dir=data_dir
         ) if phenopacket_dir is None else write_single_local_command(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
             output_dir=output_dir,
             output_file_name=Path(input_file.stem),
             command_writer=command_writer,
             phenopacket_path=input_file,
+            data_dir=data_dir
         )
     command_writer.close()
 
@@ -235,6 +243,7 @@ def prepare_commands(
     file_prefix: str,
     output_dir: Path,
     results_dir: Path,
+    data_dir: Path,
     phenopacket_dir: Path or None = None,
     input_dir: Path or None = None,
     path_to_phen2gene_dir: Path or None = None,
@@ -251,6 +260,7 @@ def prepare_commands(
             phenopacket_dir=phenopacket_dir,
             input_dir=input_dir,
             output_dir=results_dir,
+            data_dir=data_dir
         )
     if environment == "docker":
         write_docker_commands(
