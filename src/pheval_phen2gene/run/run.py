@@ -2,6 +2,7 @@ import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+
 import docker
 from pheval.utils.file_utils import all_files
 
@@ -71,22 +72,24 @@ def mount_docker(output_dir: Path) -> DockerMounts:
     return DockerMounts(results_dir=results_dir)
 
 
-def run_phen2gene_docker(input_dir: Path, testdata_dir: Path, output_dir: Path, config: Phen2GeneConfig):
+def run_phen2gene_docker(
+    input_dir: Path, testdata_dir: Path, output_dir: Path, config: Phen2GeneConfig
+):
     client = docker.from_env()
-    results_sub_output_dir = Path(output_dir).joinpath(
-        f"phen2gene{os.sep}"
-    )
+    results_sub_output_dir = Path(output_dir).joinpath(f"phen2gene{os.sep}")
     batch_file = [
         file
         for file in all_files(Path(results_sub_output_dir).joinpath("phen2gene_batch_files"))
         if file.name.startswith(os.path.basename(testdata_dir))
     ][0]
     batch_commands = read_docker_batch(batch_file)
-    mounts = mount_docker(output_dir=results_sub_output_dir.joinpath(f"{input_dir}_results/pheval_gene_results"))
+    mounts = mount_docker(
+        output_dir=results_sub_output_dir.joinpath(f"{input_dir}_results/pheval_gene_results")
+    )
     vol = [mounts.results_dir]
     for command in batch_commands:
         container = client.containers.run(
-            f"genomicslab/phen2gene",
+            "genomicslab/phen2gene",
             command,
             volumes=[str(x) for x in vol],
             detach=True,
@@ -98,6 +101,8 @@ def run_phen2gene_docker(input_dir: Path, testdata_dir: Path, output_dir: Path, 
 
 def run_phen2gene(config: Phen2GeneConfig, input_dir: Path, testdata_dir: Path, output_dir: Path):
     if config.run.environment == "docker":
-        run_phen2gene_docker(input_dir=input_dir, testdata_dir=testdata_dir, output_dir=output_dir, config=config)
+        run_phen2gene_docker(
+            input_dir=input_dir, testdata_dir=testdata_dir, output_dir=output_dir, config=config
+        )
     if config.run.environment == "local":
         run_phen2gene_local(testdata_dir=testdata_dir, output_dir=output_dir)

@@ -30,8 +30,12 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         prepare_phen2gene_commands(
             config=config, output_dir=self.output_dir, testdata_dir=self.testdata_dir
         )
-        run_phen2gene(config=config, testdata_dir=self.testdata_dir, output_dir=self.output_dir,
-                      input_dir=self.input_dir)
+        run_phen2gene(
+            config=config,
+            testdata_dir=self.testdata_dir,
+            output_dir=self.output_dir,
+            input_dir=self.input_dir,
+        )
 
     def post_process(self):
         """post_process"""
