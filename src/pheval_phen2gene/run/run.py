@@ -26,8 +26,13 @@ def prepare_phen2gene_commands(
         environment=config.run.environment,
         file_prefix=os.path.basename(testdata_dir),
         output_dir=Path(output_dir).joinpath("phen2gene"),
-        results_dir=Path(output_dir).joinpath(
-            f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results/"
+        results_dir=Path(
+            os.path.relpath(
+                Path(output_dir).joinpath(
+                    f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results/",
+                )
+            ),
+            start=os.getcwd(),
         ),
         phenopacket_dir=phenopacket_dir,
         path_to_phen2gene_dir=config.run.path_to_phen2gene_executable,
@@ -37,12 +42,9 @@ def prepare_phen2gene_commands(
 
 def run_phen2gene_local(testdata_dir: Path, output_dir: Path):
     """Run Phen2Gene locally."""
-    try:
-        Path(output_dir).joinpath(
-            f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results"
-        ).mkdir(parents=True, exist_ok=True)
-    except FileExistsError:
-        pass
+    Path(output_dir).joinpath(
+        f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results"
+    ).mkdir(parents=True, exist_ok=True)
     batch_file = [
         file
         for file in all_files(Path(output_dir).joinpath("phen2gene/phen2gene_batch_files"))
