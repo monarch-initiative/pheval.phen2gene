@@ -28,7 +28,10 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         print("running with phen2gene")
         config = parse_phen2gene_config(self.config_file)
         prepare_phen2gene_commands(
-            config=config, output_dir=self.output_dir, testdata_dir=self.testdata_dir, data_dir=self.input_dir
+            config=config,
+            output_dir=self.output_dir,
+            testdata_dir=self.testdata_dir,
+            data_dir=self.input_dir,
         )
         run_phen2gene(
             config=config,

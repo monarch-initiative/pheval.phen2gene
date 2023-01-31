@@ -128,5 +128,5 @@ def prepare_commands_command(
         input_dir=input_dir,
         path_to_phen2gene_dir=phen2gene_py,
         results_dir=results_dir,
-        data_dir=data_dir
+        data_dir=data_dir,
     )

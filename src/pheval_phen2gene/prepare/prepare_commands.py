@@ -84,7 +84,9 @@ class CommandWriter:
     def __init__(self, output_file: Path):
         self.file = open(output_file, "a")
 
-    def write_local_command(self, command_arguments: Phen2GeneCommandLineArguments, data_dir) -> None:
+    def write_local_command(
+        self, command_arguments: Phen2GeneCommandLineArguments, data_dir
+    ) -> None:
         """Write a Phen2Gene command to run locally."""
         try:
             if command_arguments.hpo_ids is None:
@@ -207,14 +209,14 @@ def write_local_commands(
             output_file_name=Path(input_file.stem),
             command_writer=command_writer,
             input_file_path=input_file,
-            data_dir=data_dir
+            data_dir=data_dir,
         ) if phenopacket_dir is None else write_single_local_command(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
             output_dir=output_dir,
             output_file_name=Path(input_file.stem),
             command_writer=command_writer,
             phenopacket_path=input_file,
-            data_dir=data_dir
+            data_dir=data_dir,
         )
     command_writer.close()
 
@@ -264,7 +266,7 @@ def prepare_commands(
             phenopacket_dir=phenopacket_dir,
             input_dir=input_dir,
             output_dir=results_dir,
-            data_dir=data_dir
+            data_dir=data_dir,
         )
     if environment == "docker":
         write_docker_commands(
