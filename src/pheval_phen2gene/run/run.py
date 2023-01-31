@@ -10,7 +10,8 @@ from pheval_phen2gene.phen2gene_config_parser import Phen2GeneConfig
 from pheval_phen2gene.prepare.prepare_commands import prepare_commands
 
 
-def prepare_phen2gene_commands(config: Phen2GeneConfig, output_dir: Path, testdata_dir: Path):
+def prepare_phen2gene_commands(config: Phen2GeneConfig, output_dir: Path, testdata_dir: Path, data_dir: Path):
+    """Prepare commands to run Phen2Gene."""
     Path(output_dir).joinpath("phen2gene").mkdir(parents=True, exist_ok=True)
     phenopacket_dir = Path(testdata_dir).joinpath(
         [
@@ -27,11 +28,13 @@ def prepare_phen2gene_commands(config: Phen2GeneConfig, output_dir: Path, testda
             f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results/"
         ),
         phenopacket_dir=phenopacket_dir,
-        path_to_phen2gene_dir=config.run.path_to_phen2gene_software_directory,
+        path_to_phen2gene_dir=config.run.path_to_phen2gene_executable,
+        data_dir=data_dir
     )
 
 
 def run_phen2gene_local(testdata_dir: Path, output_dir: Path):
+    """Run Phen2Gene locally."""
     try:
         Path(output_dir).joinpath(
             f"phen2gene/{os.path.basename(testdata_dir)}_results/phen2gene_results"
@@ -56,6 +59,7 @@ def run_phen2gene_local(testdata_dir: Path, output_dir: Path):
 
 
 def read_docker_batch(batch_file: Path) -> [str]:
+    """Read docker batch file of Phen2Gene commands."""
     with open(batch_file) as batch:
         commands = batch.readlines()
     batch.close()
@@ -65,16 +69,20 @@ def read_docker_batch(batch_file: Path) -> [str]:
 @dataclass
 class DockerMounts:
     results_dir: str
+    input_dir: str
 
 
-def mount_docker(output_dir: Path) -> DockerMounts:
+def mount_docker(output_dir: Path, input_dir: Path) -> DockerMounts:
+    """Create Docker mounts for volumes."""
     results_dir = f"{output_dir}{os.sep}:/phen2gene-results"
-    return DockerMounts(results_dir=results_dir)
+    input_dir = f"{input_dir}{os.sep}:/phen2gene-data"
+    return DockerMounts(results_dir=results_dir, input_dir=input_dir)
 
 
 def run_phen2gene_docker(
-    input_dir: Path, testdata_dir: Path, output_dir: Path, config: Phen2GeneConfig
+        input_dir: Path, testdata_dir: Path, output_dir: Path
 ):
+    """Run Phen2Gene with docker"""
     client = docker.from_env()
     results_sub_output_dir = Path(output_dir).joinpath(f"phen2gene{os.sep}")
     batch_file = [
@@ -84,9 +92,10 @@ def run_phen2gene_docker(
     ][0]
     batch_commands = read_docker_batch(batch_file)
     mounts = mount_docker(
-        output_dir=results_sub_output_dir.joinpath(f"{input_dir}_results/pheval_gene_results")
+        output_dir=results_sub_output_dir.joinpath(f"{os.path.basename(testdata_dir)}_results/pheval_gene_results"),
+        input_dir=input_dir
     )
-    vol = [mounts.results_dir]
+    vol = [mounts.results_dir, mounts.input_dir]
     for command in batch_commands:
         container = client.containers.run(
             "genomicslab/phen2gene",
@@ -100,9 +109,10 @@ def run_phen2gene_docker(
 
 
 def run_phen2gene(config: Phen2GeneConfig, input_dir: Path, testdata_dir: Path, output_dir: Path):
+    """Run Phen2Gene."""
     if config.run.environment == "docker":
         run_phen2gene_docker(
-            input_dir=input_dir, testdata_dir=testdata_dir, output_dir=output_dir, config=config
+            input_dir=input_dir, testdata_dir=testdata_dir, output_dir=output_dir
         )
     if config.run.environment == "local":
         run_phen2gene_local(testdata_dir=testdata_dir, output_dir=output_dir)
