@@ -93,6 +93,14 @@ def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
     help="Path to the results directory.",
 )
 @click.option(
+    "--data-dir",
+    "-d",
+    required=True,
+    metavar="PATH",
+    type=Path,
+    help="Path to the Phen2Gene data directory.",
+)
+@click.option(
     "--output-dir",
     "-o",
     required=True,
@@ -105,6 +113,7 @@ def prepare_commands_command(
     file_prefix: str,
     output_dir: Path,
     results_dir: Path,
+    data_dir: Path,
     phen2gene_py: Path or None = None,
     phenopacket_dir: Path = None,
     input_dir: Path = None,
@@ -119,4 +128,5 @@ def prepare_commands_command(
         input_dir=input_dir,
         path_to_phen2gene_dir=phen2gene_py,
         results_dir=results_dir,
+        data_dir=data_dir
     )
