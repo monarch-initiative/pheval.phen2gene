@@ -90,7 +90,7 @@ def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
     required=True,
     metavar="PATH",
     type=Path,
-    help="Path to the results directory.",
+    help="Relative path to the results directory for Phen2Gene results to be output.",
 )
 @click.option(
     "--data-dir",
