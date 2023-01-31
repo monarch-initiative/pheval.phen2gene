@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
@@ -96,10 +97,10 @@ class CommandWriter:
                     + " --file "
                     + str(command_arguments.input_file_path)
                     + " -out "
-                    + str(command_arguments.output_dir)
+                    + f"{str(command_arguments.output_dir)}{os.sep}"
                     + " --name "
                     + str(command_arguments.output_file_name)
-                    + " -d"
+                    + " -d "
                     + str(data_dir)
                     + "\n"
                 )
@@ -110,10 +111,10 @@ class CommandWriter:
                     + " --manual "
                     + " ".join(command_arguments.hpo_ids)
                     + " -out "
-                    + str(command_arguments.output_dir)
+                    + f"{str(command_arguments.output_dir)}{os.sep}"
                     + " --name "
                     + str(command_arguments.output_file_name)
-                    + " -d"
+                    + " -d "
                     + str(data_dir)
                     + "\n"
                 )
