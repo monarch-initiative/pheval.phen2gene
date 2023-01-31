@@ -129,6 +129,8 @@ class CommandWriter:
                     + "/phen2gene-results"
                     + " --name "
                     + str(command_arguments.output_file_name)
+                    + " -d "
+                    + "/phen2gene-data"
                     + "\n"
                 )
             if command_arguments.input_file_path is None:
@@ -139,6 +141,8 @@ class CommandWriter:
                     + "/phen2gene-results"
                     + " --name "
                     + str(command_arguments.output_file_name)
+                    + " -d "
+                    + "/phen2gene-data"
                     + "\n"
                 )
         except IOError:
