@@ -15,4 +15,22 @@ poetry install
 
 This will change when pheval is published on pypi.
 
+To install the Phen2Gene plugin:
 
+``` 
+git clone https://github.com/yaseminbridges/pheval.phen2gene.git
+
+cd pheval.phen2gene/
+
+poetry add /path/to/local/pheval
+
+poetry lock
+
+poetry install
+```
+
+To install PhEval:
+
+```
+git clone https://github.com/monarch-initiative/pheval.git 
+```
