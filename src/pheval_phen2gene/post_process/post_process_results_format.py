@@ -64,6 +64,18 @@ class StandardisePhen2GeneResult:
         return self.add_ranks(sorted_result)
 
 
+def create_gene_result(output_dir: Path, result: Path, standardised_gene_result: pd.DataFrame):
+    gene_df = pd.DataFrame(standardised_gene_result)
+    gene_df = gene_df.loc[:, ["rank", "score", "gene_symbol", "gene_identifier"]]
+    gene_df.to_csv(
+        output_dir.joinpath(
+            "pheval_gene_results/" + result.stem + "-phen2gene-pheval_gene_result.tsv"
+        ),
+        sep="\t",
+        index=False,
+    )
+
+
 def create_standardised_results(output_dir: Path, results_dir: Path) -> None:
     """Convert Phen2Gene default tsv results to PhEval gene results."""
     output_dir.joinpath("pheval_gene_results/").mkdir(exist_ok=True)
@@ -74,15 +86,7 @@ def create_standardised_results(output_dir: Path, results_dir: Path) -> None:
         standardised_gene_result = StandardisePhen2GeneResult(
             gene_result, gene_identifier_updater
         ).standardise_gene_result()
-        gene_df = pd.DataFrame(standardised_gene_result)
-        gene_df = gene_df.loc[:, ["rank", "score", "gene_symbol", "gene_identifier"]]
-        gene_df.to_csv(
-            output_dir.joinpath(
-                "pheval_gene_results/" + result.stem + "-phen2gene-pheval_gene_result.tsv"
-            ),
-            sep="\t",
-            index=False,
-        )
+        create_gene_result(output_dir, result, standardised_gene_result)
 
 
 @click.command()
