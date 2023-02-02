@@ -29,11 +29,11 @@ class Phen2GeneDockerArguments:
 
 
 def create_command_line_arguments(
-        path_to_phen2gene_dir: Path,
-        output_dir: Path,
-        output_file_name: Path,
-        input_file_path: Path or None = None,
-        phenopacket_path: Path or None = None,
+    path_to_phen2gene_dir: Path,
+    output_dir: Path,
+    output_file_name: Path,
+    input_file_path: Path or None = None,
+    phenopacket_path: Path or None = None,
 ) -> Phen2GeneCommandLineArguments:
     """Create command line arguments required for Phen2Gene."""
     if phenopacket_path is None:
@@ -56,10 +56,10 @@ def create_command_line_arguments(
 
 
 def create_docker_arguments(
-        output_dir: Path,
-        output_file_name: Path,
-        input_file_path: Path or None = None,
-        phenopacket_path: Path or None = None,
+    output_dir: Path,
+    output_file_name: Path,
+    input_file_path: Path or None = None,
+    phenopacket_path: Path or None = None,
 ) -> Phen2GeneDockerArguments:
     """Create the docker arguments required for Phen2Gene."""
     if phenopacket_path is None:
@@ -86,7 +86,7 @@ class CommandWriter:
         self.file = open(output_file, "w")
 
     def write_local_command(
-            self, command_arguments: Phen2GeneCommandLineArguments, data_dir
+        self, command_arguments: Phen2GeneCommandLineArguments, data_dir
     ) -> None:
         """Write a Phen2Gene command to run locally."""
         try:
@@ -158,13 +158,13 @@ class CommandWriter:
 
 
 def write_single_local_command(
-        path_to_phen2gene_dir: Path,
-        output_dir: Path,
-        output_file_name: Path,
-        data_dir: Path,
-        command_writer: CommandWriter,
-        input_file_path: Path or None = None,
-        phenopacket_path: Path or None = None,
+    path_to_phen2gene_dir: Path,
+    output_dir: Path,
+    output_file_name: Path,
+    data_dir: Path,
+    command_writer: CommandWriter,
+    input_file_path: Path or None = None,
+    phenopacket_path: Path or None = None,
 ) -> None:
     """Write a single command locally when given either a phenopacket or prepared input file."""
     arguments = create_command_line_arguments(
@@ -178,11 +178,11 @@ def write_single_local_command(
 
 
 def write_single_docker_command(
-        output_dir: Path,
-        output_file_name: Path,
-        command_writer: CommandWriter,
-        input_file_path: Path or None = None,
-        phenopacket_path: Path or None = None,
+    output_dir: Path,
+    output_file_name: Path,
+    command_writer: CommandWriter,
+    input_file_path: Path or None = None,
+    phenopacket_path: Path or None = None,
 ) -> None:
     """Write a docker command when given either a phenopacket or prepared input file."""
     arguments = create_docker_arguments(
@@ -195,12 +195,12 @@ def write_single_docker_command(
 
 
 def write_local_commands(
-        path_to_phen2gene_dir: Path,
-        command_file_path: Path,
-        output_dir: Path,
-        data_dir: Path,
-        phenopacket_dir: Path or None,
-        input_dir: Path or None,
+    path_to_phen2gene_dir: Path,
+    command_file_path: Path,
+    output_dir: Path,
+    data_dir: Path,
+    phenopacket_dir: Path or None,
+    input_dir: Path or None,
 ) -> None:
     """Write all commands to run locally when given either phenopacket or input directory."""
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
@@ -225,10 +225,10 @@ def write_local_commands(
 
 
 def write_docker_commands(
-        command_file_path: Path,
-        output_dir: Path,
-        phenopacket_dir: Path or None,
-        input_dir: Path or None,
+    command_file_path: Path,
+    output_dir: Path,
+    phenopacket_dir: Path or None,
+    input_dir: Path or None,
 ) -> None:
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
     command_writer = CommandWriter(command_file_path)
@@ -248,14 +248,14 @@ def write_docker_commands(
 
 
 def prepare_commands(
-        environment: str,
-        file_prefix: str,
-        output_dir: Path,
-        results_dir: Path,
-        data_dir: Path,
-        phenopacket_dir: Path or None = None,
-        input_dir: Path or None = None,
-        path_to_phen2gene_dir: Path or None = None,
+    environment: str,
+    file_prefix: str,
+    output_dir: Path,
+    results_dir: Path,
+    data_dir: Path,
+    phenopacket_dir: Path or None = None,
+    input_dir: Path or None = None,
+    path_to_phen2gene_dir: Path or None = None,
 ) -> None:
     """Prepare all commands to run with Phen2Gene."""
     output_dir.joinpath("phen2gene_batch_files").mkdir(parents=True, exist_ok=True)
