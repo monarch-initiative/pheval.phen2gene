@@ -2,7 +2,7 @@ from pathlib import Path
 
 import click
 import pandas as pd
-from pheval.post_processing.post_processing import PhEvalGeneResult
+from pheval.post_processing.post_processing import PhEvalGeneResult, RankedPhEvalGeneResult, create_pheval_result
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
 
@@ -13,7 +13,7 @@ def read_phen2gene_result(phen2gene_result: Path):
 
 
 class PhEvalGeneResultFromPhen2GeneTsvCreator:
-    def __init__(self, phen2gene_tsv_result:pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater):
+    def __init__(self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater):
         self.phen2gene_tsv_result = phen2gene_tsv_result
         self.gene_identifier_updator = gene_identifier_updator
 
@@ -37,6 +37,44 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
         return simplified_phen2gene_result
 
 
+def create_pheval_gene_result_from_phen2gene(
+        phen2gene_tsv_result: pd.DataFrame,
+        gene_identifier_updator: GeneIdentifierUpdater
+) -> [RankedPhEvalGeneResult]:
+    pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
+        phen2gene_tsv_result,
+        gene_identifier_updator
+    ).extract_pheval_gene_requirements()
+    return create_pheval_result(pheval_gene_result, "Score")
+
+
+def write_pheval_gene_result(
+        ranked_pheval_result: [RankedPhEvalGeneResult], output_dir: Path, tool_result_path: Path
+) -> None:
+    """Write ranked PhEval gene result to tsv."""
+    ranked_result = pd.DataFrame([x.as_dict() for x in ranked_pheval_result])
+    pheval_gene_output = ranked_result.loc[:, ["rank", "score", "gene_symbol", "gene_identifier"]]
+    pheval_gene_output.to_csv(
+        output_dir.joinpath(
+            "pheval_gene_results/" + tool_result_path.stem + "-pheval_gene_result.tsv"
+        ),
+        sep="\t",
+        index=False,
+    )
+
+
+def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
+    """Write standardised gene and variant results from default Exomiser json output."""
+    output_dir.joinpath("pheval_gene_results/").mkdir(exist_ok=True)
+    hgnc_data = create_hgnc_dict()
+    gene_identifier_updator = GeneIdentifierUpdater(hgnc_data, "ensembl_id")
+    for result in all_files(results_dir):
+        phen2gene_tsv_result = read_phen2gene_result(result)
+        pheval_gene_result = create_pheval_gene_result_from_phen2gene(
+            phen2gene_tsv_result,
+            gene_identifier_updator
+        )
+        write_pheval_gene_result(pheval_gene_result, output_dir, result)
 
 
 @click.command()
@@ -59,4 +97,4 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
 def post_process_phen2gene_results(results_dir: Path, output_dir: Path) -> None:
     """Post-process Phen2Gene .tsv results to PhEval gene result format."""
     pass
-    # create_standardised_results(output_dir, results_dir)
+    create_standardised_results(output_dir, results_dir)
