@@ -26,16 +26,20 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
 
     @staticmethod
     def find_gene_symbol(result_entry: pd.Series) -> str:
+        """Return gene symbol from Phen2Gene result entry."""
         return result_entry["Gene"]
 
     def find_ensembl_identifier(self, result_entry: pd.Series) -> str:
+        """Return ensembl gene identifier from Phen2Gene result entry."""
         return self.gene_identifier_updator.find_identifier(result_entry["Gene"])
 
     @staticmethod
     def find_relevant_score(result_entry: pd.Series) -> float:
+        """Return score from Phen2Gene result entry."""
         return round(result_entry["Score"], 4)
 
     def extract_pheval_gene_requirements(self) -> [PhEvalGeneResult]:
+        """Extract data required to produce PhEval gene output."""
         simplified_phen2gene_result = []
         for _index, row in self.phen2gene_tsv_result.iterrows():
             simplified_phen2gene_result.append(
@@ -51,6 +55,7 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
 def create_pheval_gene_result_from_phen2gene(
     phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
 ) -> [RankedPhEvalGeneResult]:
+    """Create ranked PhEval gene result from Phen2Gene tsv."""
     pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
         phen2gene_tsv_result, gene_identifier_updator
     ).extract_pheval_gene_requirements()
