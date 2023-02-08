@@ -5,6 +5,7 @@ import pandas as pd
 from pheval.post_processing.post_processing import PhEvalGeneResult, RankedPhEvalGeneResult, create_pheval_result
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
+from pheval.post_processing.post_processing import write_pheval_gene_result
 
 
 def read_phen2gene_result(phen2gene_result: Path):
@@ -46,21 +47,6 @@ def create_pheval_gene_result_from_phen2gene(
         gene_identifier_updator
     ).extract_pheval_gene_requirements()
     return create_pheval_result(pheval_gene_result, "Score")
-
-
-def write_pheval_gene_result(
-        ranked_pheval_result: [RankedPhEvalGeneResult], output_dir: Path, tool_result_path: Path
-) -> None:
-    """Write ranked PhEval gene result to tsv."""
-    ranked_result = pd.DataFrame([x.as_dict() for x in ranked_pheval_result])
-    pheval_gene_output = ranked_result.loc[:, ["rank", "score", "gene_symbol", "gene_identifier"]]
-    pheval_gene_output.to_csv(
-        output_dir.joinpath(
-            "pheval_gene_results/" + tool_result_path.stem + "-pheval_gene_result.tsv"
-        ),
-        sep="\t",
-        index=False,
-    )
 
 
 def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
