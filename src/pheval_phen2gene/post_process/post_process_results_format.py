@@ -89,5 +89,4 @@ def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
 )
 def post_process_phen2gene_results(results_dir: Path, output_dir: Path) -> None:
     """Post-process Phen2Gene .tsv results to PhEval gene result format."""
-    pass
     create_standardised_results(output_dir, results_dir)
