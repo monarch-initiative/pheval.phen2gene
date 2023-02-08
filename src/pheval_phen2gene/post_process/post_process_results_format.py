@@ -2,10 +2,14 @@ from pathlib import Path
 
 import click
 import pandas as pd
-from pheval.post_processing.post_processing import PhEvalGeneResult, RankedPhEvalGeneResult, create_pheval_result
+from pheval.post_processing.post_processing import (
+    PhEvalGeneResult,
+    RankedPhEvalGeneResult,
+    create_pheval_result,
+    write_pheval_gene_result,
+)
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
-from pheval.post_processing.post_processing import write_pheval_gene_result
 
 
 def read_phen2gene_result(phen2gene_result: Path):
@@ -14,7 +18,9 @@ def read_phen2gene_result(phen2gene_result: Path):
 
 
 class PhEvalGeneResultFromPhen2GeneTsvCreator:
-    def __init__(self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater):
+    def __init__(
+        self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
+    ):
         self.phen2gene_tsv_result = phen2gene_tsv_result
         self.gene_identifier_updator = gene_identifier_updator
 
@@ -32,19 +38,21 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
     def extract_pheval_gene_requirements(self) -> [PhEvalGeneResult]:
         simplified_phen2gene_result = []
         for _index, row in self.phen2gene_tsv_result.iterrows():
-            simplified_phen2gene_result.append(PhEvalGeneResult(gene_symbol=self.find_gene_symbol(row),
-                                                                gene_identifier=self.find_ensembl_identifier(row),
-                                                                score=self.find_relevant_score(row)))
+            simplified_phen2gene_result.append(
+                PhEvalGeneResult(
+                    gene_symbol=self.find_gene_symbol(row),
+                    gene_identifier=self.find_ensembl_identifier(row),
+                    score=self.find_relevant_score(row),
+                )
+            )
         return simplified_phen2gene_result
 
 
 def create_pheval_gene_result_from_phen2gene(
-        phen2gene_tsv_result: pd.DataFrame,
-        gene_identifier_updator: GeneIdentifierUpdater
+    phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
 ) -> [RankedPhEvalGeneResult]:
     pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
-        phen2gene_tsv_result,
-        gene_identifier_updator
+        phen2gene_tsv_result, gene_identifier_updator
     ).extract_pheval_gene_requirements()
     return create_pheval_result(pheval_gene_result, "Score")
 
@@ -57,8 +65,7 @@ def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
     for result in all_files(results_dir):
         phen2gene_tsv_result = read_phen2gene_result(result)
         pheval_gene_result = create_pheval_gene_result_from_phen2gene(
-            phen2gene_tsv_result,
-            gene_identifier_updator
+            phen2gene_tsv_result, gene_identifier_updator
         )
         write_pheval_gene_result(pheval_gene_result, output_dir, result)
 
