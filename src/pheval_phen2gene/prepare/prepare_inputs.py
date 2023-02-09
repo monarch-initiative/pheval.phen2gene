@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import click
 from phenopackets import PhenotypicFeature
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader
@@ -27,6 +28,7 @@ def prepare_inputs(output_dir: Path, phenopacket_dir: Path) -> None:
     """Prepare text files input for Phen2Gene from a directory of phenopackets."""
     for phenopacket_path in all_files(phenopacket_dir):
         prepare_input(output_dir, phenopacket_path)
+
 
 @click.command("prepare-inputs")
 @click.option(
