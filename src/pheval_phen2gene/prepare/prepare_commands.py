@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
+import click
+from pheval.prepare.custom_exceptions import MutuallyExclusiveOptionError
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader
 
@@ -278,3 +280,93 @@ def prepare_commands(
             phenopacket_dir=phenopacket_dir,
             input_dir=input_dir,
         )
+
+
+@click.command("prepare-commands")
+@click.option(
+    "--environment",
+    "-e",
+    required=False,
+    default="local",
+    show_default=True,
+    help="Environment to run commands.",
+    type=click.Choice(["local", "docker"]),
+)
+@click.option(
+    "--file-prefix",
+    "-f",
+    required=True,
+    metavar=str,
+    type=str,
+    help="Prefix for output batch file.",
+)
+@click.option(
+    "--output-dir",
+    "-o",
+    required=True,
+    metavar="PATH",
+    type=Path,
+    help="Directory for batch file to be output.",
+)
+@click.option(
+    "--results-dir",
+    "-r",
+    required=True,
+    metavar="PATH",
+    type=Path,
+    help="Relative path for results to be output by Phen2gene.",
+)
+@click.option(
+    "--data-dir",
+    "-d",
+    required=True,
+    metavar="PATH",
+    type=Path,
+    help="Path to Phen2Gene data directory.",
+)
+@click.option(
+    "--phenopacket-dir",
+    "-p",
+    required=False,
+    metavar="PATH",
+    help="Path to phenopacket directory.",
+    cls=MutuallyExclusiveOptionError,
+    mutually_exclusive=["input_dir"],
+)
+@click.option(
+    "--input-dir",
+    "-i",
+    required=False,
+    metavar="PATH",
+    help="Path to input text file directory.",
+    cls=MutuallyExclusiveOptionError,
+    mutually_exclusive=["phenopacket_dir"],
+)
+@click.option(
+    "--phen2gene-py",
+    "-py",
+    required=False,
+    metavar="Path",
+    type=Path,
+    help="Path to Phen2Gene python executable - not required if running with docker.",
+)
+def prepare_commands_command(
+    environment: str,
+    file_prefix: str,
+    output_dir: Path,
+    results_dir: Path,
+    data_dir: Path,
+    phenopacket_dir: Path or None = None,
+    input_dir: Path or None = None,
+    phen2gene_py: Path or None = None,
+):
+    prepare_commands(
+        environment,
+        file_prefix,
+        output_dir,
+        results_dir,
+        data_dir,
+        phenopacket_dir,
+        input_dir,
+        phen2gene_py,
+    )
