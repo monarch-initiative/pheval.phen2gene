@@ -15,7 +15,7 @@ def write_hpo_ids_to_output_file(
 
 
 def prepare_input(output_dir: Path, phenopacket_path: Path) -> None:
-    """Prepare the text file input for Phen2Gene from a phenopacket."""
+    """Prepare a text file input for Phen2Gene from a phenopacket."""
     output_dir.mkdir(exist_ok=True)
     phenopacket = phenopacket_reader(phenopacket_path)
     phenotypic_profile = PhenopacketUtil(phenopacket).observed_phenotypic_features()
@@ -27,3 +27,23 @@ def prepare_inputs(output_dir: Path, phenopacket_dir: Path) -> None:
     """Prepare text files input for Phen2Gene from a directory of phenopackets."""
     for phenopacket_path in all_files(phenopacket_dir):
         prepare_input(output_dir, phenopacket_path)
+
+@click.command("prepare-inputs")
+@click.option(
+    "--phenopacket-dir",
+    "-p",
+    metavar="Path",
+    required=True,
+    help="Path to phenopacket directory.",
+    type=Path,
+)
+@click.option(
+    "--output-dir",
+    "-o",
+    metavar="Path",
+    required=True,
+    help="Path to output directory.",
+    type=Path,
+)
+def prepare_inputs_command(phenopacket_dir: Path, output_dir: Path):
+    prepare_inputs(output_dir=output_dir, phenopacket_dir=phenopacket_dir)
