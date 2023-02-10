@@ -28,18 +28,18 @@ class TestPhEvalGeneResultFromPhen2GeneTsvCreator(unittest.TestCase):
 
     def test_find_gene_symbol(self):
         self.assertEqual(
-            self.phen2gene_result.find_gene_symbol(example_phen2gene_result.iloc[0]), "GCDH"
+            self.phen2gene_result._find_gene_symbol(example_phen2gene_result.iloc[0]), "GCDH"
         )
 
     def test_find_ensembl_identifier(self):
         self.assertEqual(
-            self.phen2gene_result.find_ensembl_identifier(example_phen2gene_result.iloc[0]),
+            self.phen2gene_result._find_ensembl_identifier(example_phen2gene_result.iloc[0]),
             "ENSG00000105607",
         )
 
     def test_find_relevant_score(self):
         self.assertEqual(
-            self.phen2gene_result.find_relevant_score(example_phen2gene_result.iloc[0]), 1.0
+            self.phen2gene_result._find_relevant_score(example_phen2gene_result.iloc[0]), 1.0
         )
 
     def test_extract_pheval_gene_requirements(self):
