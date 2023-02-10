@@ -53,7 +53,9 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
 
 
 def create_pheval_gene_result_from_phen2gene(
-    phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater, sort_order: str
+    phen2gene_tsv_result: pd.DataFrame,
+    gene_identifier_updator: GeneIdentifierUpdater,
+    sort_order: str,
 ) -> [RankedPhEvalGeneResult]:
     """Create ranked PhEval gene result from Phen2Gene tsv."""
     pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(

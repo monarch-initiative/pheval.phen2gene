@@ -14,6 +14,6 @@ def post_process_results_format(testdata_dir: Path, output_dir: Path, config: Ph
     create_standardised_results(
         results_dir=Path(run_output_dir).joinpath("phen2gene_results"),
         output_dir=run_output_dir,
-        sort_order=config.post_process.score_order
+        sort_order=config.post_process.score_order,
     )
     print("done")
