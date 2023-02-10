@@ -2,9 +2,10 @@ import os
 from pathlib import Path
 
 from pheval_phen2gene.post_process.post_process_results_format import create_standardised_results
+from pheval_phen2gene.utils.phen2gene_config_parser import Phen2GeneConfig
 
 
-def post_process_results_format(testdata_dir: Path, output_dir: Path):
+def post_process_results_format(testdata_dir: Path, output_dir: Path, config: Phen2GeneConfig):
     """Create pheval gene result from Phen2Gene tsv output."""
     print("...creating pheval gene results format...")
     run_output_dir = Path(output_dir).joinpath(
@@ -13,5 +14,6 @@ def post_process_results_format(testdata_dir: Path, output_dir: Path):
     create_standardised_results(
         results_dir=Path(run_output_dir).joinpath("phen2gene_results"),
         output_dir=run_output_dir,
+        sort_order=config.post_process.score_order
     )
     print("done")
