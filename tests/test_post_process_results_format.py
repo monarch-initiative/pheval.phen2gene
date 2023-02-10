@@ -61,7 +61,7 @@ class TestCreatePhEvalGeneResultFromPhen2Gene(unittest.TestCase):
     def test_create_pheval_gene_result_from_phen2gene(self):
         self.assertEqual(
             create_pheval_gene_result_from_phen2gene(
-                example_phen2gene_result, GeneIdentifierUpdater(create_hgnc_dict(), "ensembl_id")
+                example_phen2gene_result, GeneIdentifierUpdater(create_hgnc_dict(), "ensembl_id"), "descending"
             ),
             [
                 RankedPhEvalGeneResult(
