@@ -25,16 +25,16 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
         self.gene_identifier_updator = gene_identifier_updator
 
     @staticmethod
-    def find_gene_symbol(result_entry: pd.Series) -> str:
+    def _find_gene_symbol(result_entry: pd.Series) -> str:
         """Return gene symbol from Phen2Gene result entry."""
         return result_entry["Gene"]
 
-    def find_ensembl_identifier(self, result_entry: pd.Series) -> str:
+    def _find_ensembl_identifier(self, result_entry: pd.Series) -> str:
         """Return ensembl gene identifier from Phen2Gene result entry."""
         return self.gene_identifier_updator.find_identifier(result_entry["Gene"])
 
     @staticmethod
-    def find_relevant_score(result_entry: pd.Series) -> float:
+    def _find_relevant_score(result_entry: pd.Series) -> float:
         """Return score from Phen2Gene result entry."""
         return round(result_entry["Score"], 4)
 
@@ -44,25 +44,25 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
         for _index, row in self.phen2gene_tsv_result.iterrows():
             simplified_phen2gene_result.append(
                 PhEvalGeneResult(
-                    gene_symbol=self.find_gene_symbol(row),
-                    gene_identifier=self.find_ensembl_identifier(row),
-                    score=self.find_relevant_score(row),
+                    gene_symbol=self._find_gene_symbol(row),
+                    gene_identifier=self._find_ensembl_identifier(row),
+                    score=self._find_relevant_score(row),
                 )
             )
         return simplified_phen2gene_result
 
 
 def create_pheval_gene_result_from_phen2gene(
-    phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
+    phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater, sort_order: str
 ) -> [RankedPhEvalGeneResult]:
     """Create ranked PhEval gene result from Phen2Gene tsv."""
     pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
         phen2gene_tsv_result, gene_identifier_updator
     ).extract_pheval_gene_requirements()
-    return create_pheval_result(pheval_gene_result, "Score")
+    return create_pheval_result(pheval_gene_result, sort_order)
 
 
-def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
+def create_standardised_results(results_dir: Path, output_dir: Path, sort_order: str) -> None:
     """Write standardised gene and variant results from default Exomiser json output."""
     output_dir.joinpath("pheval_gene_results/").mkdir(exist_ok=True)
     hgnc_data = create_hgnc_dict()
@@ -70,7 +70,7 @@ def create_standardised_results(results_dir: Path, output_dir: Path) -> None:
     for result in all_files(results_dir):
         phen2gene_tsv_result = read_phen2gene_result(result)
         pheval_gene_result = create_pheval_gene_result_from_phen2gene(
-            phen2gene_tsv_result, gene_identifier_updator
+            phen2gene_tsv_result, gene_identifier_updator, sort_order
         )
         write_pheval_gene_result(pheval_gene_result, output_dir, result)
 
