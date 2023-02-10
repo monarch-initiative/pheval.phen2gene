@@ -15,8 +15,15 @@ class Phen2GeneRun:
 
 @serde
 @dataclass
+class Phen2GenePostProcess:
+    score_order: str
+
+
+@serde
+@dataclass
 class Phen2GeneConfig:
     run: Phen2GeneRun
+    post_process: Phen2GenePostProcess
 
 
 def parse_phen2gene_config(config_path: Path) -> Phen2GeneConfig:

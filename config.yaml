@@ -1,3 +1,9 @@
 run:
   environment: local
   path_to_phen2gene_executable: /Users/yaseminbridges/phen2gene/Phen2Gene/phen2gene.py
+post_process:
+    # Score order should be specified to either ASCENDING or DESCENDING
+    # ASCENDING orders results with the lowest values ranked first
+    # DESCENDING orders results with the highest values ranked first
+    # NOTE when changing the score_name ensure the score_order is also correct
+    score_order: descending
