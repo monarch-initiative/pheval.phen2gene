@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-from pheval_phen2gene.post_process.post_process_results_format import create_standardised_results
 from pheval_phen2gene.config_parser import Phen2GeneConfig
+from pheval_phen2gene.post_process.post_process_results_format import create_standardised_results
 
 
 def post_process_results_format(testdata_dir: Path, output_dir: Path, config: Phen2GeneConfig):
