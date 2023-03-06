@@ -6,7 +6,7 @@ from pheval.runners.runner import PhEvalRunner
 
 from pheval_phen2gene.post_process.post_process import post_process_results_format
 from pheval_phen2gene.run.run import prepare_phen2gene_commands, run_phen2gene
-from pheval_phen2gene.utils.phen2gene_config_parser import parse_phen2gene_config
+from pheval_phen2gene.config_parser import parse_phen2gene_config
 
 
 @dataclass

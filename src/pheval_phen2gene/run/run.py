@@ -7,7 +7,7 @@ import docker
 from pheval.utils.file_utils import all_files
 
 from pheval_phen2gene.prepare.prepare_commands import prepare_commands
-from pheval_phen2gene.utils.phen2gene_config_parser import Phen2GeneConfig
+from pheval_phen2gene.config_parser import Phen2GeneConfig
 
 
 def prepare_phen2gene_commands(
