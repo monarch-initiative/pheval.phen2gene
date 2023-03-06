@@ -10,6 +10,7 @@ from serde.yaml import from_yaml
 @dataclass
 class Phen2GeneRun:
     environment: str
+    version: str
     path_to_phen2gene_executable: Path
 
 
