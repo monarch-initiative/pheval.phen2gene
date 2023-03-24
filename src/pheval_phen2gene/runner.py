@@ -29,15 +29,17 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         config = parse_phen2gene_config(self.config_file)
         prepare_phen2gene_commands(
             config=config,
-            output_dir=self.output_dir,
+            tool_input_commands_dir=self.tool_input_commands_dir,
             testdata_dir=self.testdata_dir,
             data_dir=self.input_dir,
+            raw_results_dir=self.raw_results_dir,
         )
         run_phen2gene(
             config=config,
             testdata_dir=self.testdata_dir,
-            output_dir=self.output_dir,
             input_dir=self.input_dir,
+            raw_results_dir=self.raw_results_dir,
+            tool_input_commands_dir=self.tool_input_commands_dir,
         )
 
     def post_process(self):
@@ -45,5 +47,5 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         print("post processing")
         config = parse_phen2gene_config(self.config_file)
         post_process_results_format(
-            testdata_dir=self.testdata_dir, output_dir=self.output_dir, config=config
+            raw_results_dir=self.raw_results_dir, output_dir=self.output_dir, config=config
         )
