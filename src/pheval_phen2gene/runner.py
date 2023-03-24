@@ -32,14 +32,14 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
             tool_input_commands_dir=self.tool_input_commands_dir,
             testdata_dir=self.testdata_dir,
             data_dir=self.input_dir,
-            raw_results_dir=self.raw_results_dir
+            raw_results_dir=self.raw_results_dir,
         )
         run_phen2gene(
             config=config,
             testdata_dir=self.testdata_dir,
             input_dir=self.input_dir,
             raw_results_dir=self.raw_results_dir,
-            tool_input_commands_dir=self.tool_input_commands_dir
+            tool_input_commands_dir=self.tool_input_commands_dir,
         )
 
     def post_process(self):

@@ -260,9 +260,7 @@ def prepare_commands(
     path_to_phen2gene_dir: Path or None = None,
 ) -> None:
     """Prepare all commands to run with Phen2Gene."""
-    command_file_path = output_dir.joinpath(
-        f"{file_prefix}-phen2gene-batch.txt"
-    )
+    command_file_path = output_dir.joinpath(f"{file_prefix}-phen2gene-batch.txt")
     if environment == "local":
         write_local_commands(
             path_to_phen2gene_dir=path_to_phen2gene_dir,

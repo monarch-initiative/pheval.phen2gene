@@ -67,7 +67,9 @@ def create_pheval_gene_result_from_phen2gene(
 def create_standardised_results(results_dir: Path, output_dir: Path, sort_order: str) -> None:
     """Write standardised gene and variant results from default Exomiser json output."""
     hgnc_data = create_hgnc_dict()
-    gene_identifier_updator = GeneIdentifierUpdater(hgnc_data=hgnc_data, gene_identifier="ensembl_id")
+    gene_identifier_updator = GeneIdentifierUpdater(
+        hgnc_data=hgnc_data, gene_identifier="ensembl_id"
+    )
     for result in all_files(results_dir):
         phen2gene_tsv_result = read_phen2gene_result(result)
         pheval_gene_result = create_pheval_gene_result_from_phen2gene(
