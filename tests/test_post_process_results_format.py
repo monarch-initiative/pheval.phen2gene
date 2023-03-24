@@ -23,7 +23,9 @@ class TestPhEvalGeneResultFromPhen2GeneTsvCreator(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.phen2gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
             phen2gene_tsv_result=example_phen2gene_result,
-            gene_identifier_updator=GeneIdentifierUpdater(create_hgnc_dict(), "ensembl_id"),
+            gene_identifier_updator=GeneIdentifierUpdater(
+                hgnc_data=create_hgnc_dict(), gene_identifier="ensembl_id"
+            ),
         )
 
     def test_find_gene_symbol(self):
@@ -62,7 +64,7 @@ class TestCreatePhEvalGeneResultFromPhen2Gene(unittest.TestCase):
         self.assertEqual(
             create_pheval_gene_result_from_phen2gene(
                 example_phen2gene_result,
-                GeneIdentifierUpdater(create_hgnc_dict(), "ensembl_id"),
+                GeneIdentifierUpdater(hgnc_data=create_hgnc_dict(), gene_identifier="ensembl_id"),
                 "descending",
             ),
             [
