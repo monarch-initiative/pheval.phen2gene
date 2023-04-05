@@ -46,11 +46,6 @@ def run_phen2gene_local(testdata_dir: Path, tool_input_commands_dir: Path):
         for file in all_files(tool_input_commands_dir)
         if file.name.startswith(Path(testdata_dir).name)
     ][0]
-    subprocess.run(
-        ["activate", "phen2gene"],
-        shell=False,
-    )
-    print("activated phen2gene conda environment")
     print("running phen2gene")
     subprocess.run(
         ["bash", str(batch_file)],
