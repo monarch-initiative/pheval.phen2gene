@@ -2,10 +2,7 @@ from pathlib import Path
 
 import click
 import pandas as pd
-from pheval.post_processing.post_processing import (
-    PhEvalGeneResult,
-    generate_pheval_result
-)
+from pheval.post_processing.post_processing import PhEvalGeneResult, generate_pheval_result
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
 
@@ -17,7 +14,7 @@ def read_phen2gene_result(phen2gene_result: Path):
 
 class PhEvalGeneResultFromPhen2GeneTsvCreator:
     def __init__(
-            self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
+        self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
     ):
         self.phen2gene_tsv_result = phen2gene_tsv_result
         self.gene_identifier_updator = gene_identifier_updator
@@ -61,8 +58,12 @@ def create_standardised_results(results_dir: Path, output_dir: Path, sort_order:
         pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
             phen2gene_tsv_result, gene_identifier_updator
         ).extract_pheval_gene_requirements()
-        generate_pheval_result(pheval_result=pheval_gene_result, sort_order_str=sort_order,
-                               output_dir=output_dir, tool_result_path=result)
+        generate_pheval_result(
+            pheval_result=pheval_gene_result,
+            sort_order_str=sort_order,
+            output_dir=output_dir,
+            tool_result_path=result,
+        )
 
 
 @click.command()
