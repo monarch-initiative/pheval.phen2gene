@@ -1,7 +1,7 @@
 import unittest
 
 import pandas as pd
-from pheval.post_processing.post_processing import PhEvalGeneResult, RankedPhEvalGeneResult
+from pheval.post_processing.post_processing import PhEvalGeneResult
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
 
 from pheval_phen2gene.post_process.post_process_results_format import (
