@@ -6,7 +6,6 @@ from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_di
 
 from pheval_phen2gene.post_process.post_process_results_format import (
     PhEvalGeneResultFromPhen2GeneTsvCreator,
-    create_pheval_gene_result_from_phen2gene,
 )
 
 example_phen2gene_result = pd.DataFrame(
