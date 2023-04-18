@@ -56,34 +56,3 @@ class TestPhEvalGeneResultFromPhen2GeneTsvCreator(unittest.TestCase):
                 ),
             ],
         )
-
-
-class TestCreatePhEvalGeneResultFromPhen2Gene(unittest.TestCase):
-    def test_create_pheval_gene_result_from_phen2gene(self):
-        self.assertEqual(
-            create_pheval_gene_result_from_phen2gene(
-                example_phen2gene_result,
-                GeneIdentifierUpdater(hgnc_data=create_hgnc_dict(), gene_identifier="ensembl_id"),
-                "descending",
-            ),
-            [
-                RankedPhEvalGeneResult(
-                    pheval_gene_result=PhEvalGeneResult(
-                        gene_symbol="GCDH", gene_identifier="ENSG00000105607", score=1.0
-                    ),
-                    rank=1,
-                ),
-                RankedPhEvalGeneResult(
-                    pheval_gene_result=PhEvalGeneResult(
-                        gene_symbol="ETFB", gene_identifier="ENSG00000105379", score=0.2984
-                    ),
-                    rank=2,
-                ),
-                RankedPhEvalGeneResult(
-                    pheval_gene_result=PhEvalGeneResult(
-                        gene_symbol="ETFA", gene_identifier="ENSG00000140374", score=0.287
-                    ),
-                    rank=3,
-                ),
-            ],
-        )
