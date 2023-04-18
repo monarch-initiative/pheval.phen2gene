@@ -4,9 +4,7 @@ import click
 import pandas as pd
 from pheval.post_processing.post_processing import (
     PhEvalGeneResult,
-    RankedPhEvalGeneResult,
-    create_pheval_result,
-    write_pheval_gene_result,
+    generate_pheval_result
 )
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
@@ -19,7 +17,7 @@ def read_phen2gene_result(phen2gene_result: Path):
 
 class PhEvalGeneResultFromPhen2GeneTsvCreator:
     def __init__(
-        self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
+            self, phen2gene_tsv_result: pd.DataFrame, gene_identifier_updator: GeneIdentifierUpdater
     ):
         self.phen2gene_tsv_result = phen2gene_tsv_result
         self.gene_identifier_updator = gene_identifier_updator
@@ -52,18 +50,6 @@ class PhEvalGeneResultFromPhen2GeneTsvCreator:
         return simplified_phen2gene_result
 
 
-def create_pheval_gene_result_from_phen2gene(
-    phen2gene_tsv_result: pd.DataFrame,
-    gene_identifier_updator: GeneIdentifierUpdater,
-    sort_order: str,
-) -> [RankedPhEvalGeneResult]:
-    """Create ranked PhEval gene result from Phen2Gene tsv."""
-    pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
-        phen2gene_tsv_result, gene_identifier_updator
-    ).extract_pheval_gene_requirements()
-    return create_pheval_result(pheval_gene_result, sort_order)
-
-
 def create_standardised_results(results_dir: Path, output_dir: Path, sort_order: str) -> None:
     """Write standardised gene and variant results from default Exomiser json output."""
     hgnc_data = create_hgnc_dict()
@@ -72,10 +58,11 @@ def create_standardised_results(results_dir: Path, output_dir: Path, sort_order:
     )
     for result in all_files(results_dir):
         phen2gene_tsv_result = read_phen2gene_result(result)
-        pheval_gene_result = create_pheval_gene_result_from_phen2gene(
-            phen2gene_tsv_result, gene_identifier_updator, sort_order
-        )
-        write_pheval_gene_result(pheval_gene_result, output_dir, result)
+        pheval_gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
+            phen2gene_tsv_result, gene_identifier_updator
+        ).extract_pheval_gene_requirements()
+        generate_pheval_result(pheval_result=pheval_gene_result, sort_order_str=sort_order,
+                               output_dir=output_dir, tool_result_path=result)
 
 
 @click.command()
@@ -95,6 +82,15 @@ def create_standardised_results(results_dir: Path, output_dir: Path, sort_order:
     help="Path to the output directory.",
     type=Path,
 )
-def post_process_phen2gene_results(results_dir: Path, output_dir: Path) -> None:
+@click.option(
+    "--sort-order",
+    "-so",
+    required=True,
+    help="Ordering of results for ranking.",
+    type=click.Choice(["ascending", "descending"]),
+    default="descending",
+    show_default=True,
+)
+def post_process_phen2gene_results(results_dir: Path, output_dir: Path, sort_order: str) -> None:
     """Post-process Phen2Gene .tsv results to PhEval gene result format."""
-    create_standardised_results(output_dir, results_dir)
+    create_standardised_results(output_dir, results_dir, sort_order)
