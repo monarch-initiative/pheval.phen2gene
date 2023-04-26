@@ -6,8 +6,8 @@ from pathlib import Path
 import docker
 from pheval.utils.file_utils import all_files
 
-from pheval_phen2gene.tool_specific_configuration_parser import Phen2GeneToolSpecificConfigurations
 from pheval_phen2gene.prepare.prepare_commands import prepare_commands
+from pheval_phen2gene.tool_specific_configuration_parser import Phen2GeneToolSpecificConfigurations
 
 
 def prepare_phen2gene_commands(
