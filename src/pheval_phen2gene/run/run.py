@@ -6,12 +6,12 @@ from pathlib import Path
 import docker
 from pheval.utils.file_utils import all_files
 
-from pheval_phen2gene.config_parser import Phen2GeneConfig
 from pheval_phen2gene.prepare.prepare_commands import prepare_commands
+from pheval_phen2gene.tool_specific_configuration_parser import Phen2GeneToolSpecificConfigurations
 
 
 def prepare_phen2gene_commands(
-    config: Phen2GeneConfig,
+    config: Phen2GeneToolSpecificConfigurations,
     tool_input_commands_dir: Path,
     testdata_dir: Path,
     data_dir: Path,
@@ -26,7 +26,7 @@ def prepare_phen2gene_commands(
         ][0]
     )
     prepare_commands(
-        environment=config.run.environment,
+        environment=config.environment,
         file_prefix=os.path.basename(testdata_dir),
         output_dir=tool_input_commands_dir,
         results_dir=Path(
@@ -34,7 +34,7 @@ def prepare_phen2gene_commands(
             start=os.getcwd(),
         ),
         phenopacket_dir=phenopacket_dir,
-        path_to_phen2gene_dir=config.run.path_to_phen2gene_executable,
+        path_to_phen2gene_dir=data_dir.joinpath(config.phen2gene_python_executable),
         data_dir=data_dir.joinpath("lib"),
     )
 
@@ -103,21 +103,21 @@ def run_phen2gene_docker(
 
 
 def run_phen2gene(
-    config: Phen2GeneConfig,
+    config: Phen2GeneToolSpecificConfigurations,
     input_dir: Path,
     testdata_dir: Path,
     tool_input_commands_dir: Path,
     raw_results_dir: Path,
 ):
     """Run Phen2Gene."""
-    if config.run.environment == "docker":
+    if config.environment == "docker":
         run_phen2gene_docker(
             input_dir=input_dir,
             testdata_dir=testdata_dir,
             tool_input_commands_dir=tool_input_commands_dir,
             raw_results_dir=raw_results_dir,
         )
-    if config.run.environment == "local":
+    if config.environment == "local":
         run_phen2gene_local(
             testdata_dir=testdata_dir, tool_input_commands_dir=tool_input_commands_dir
         )

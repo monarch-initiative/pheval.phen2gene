@@ -1,10 +1,8 @@
-run:
+tool: phen2gene
+tool_version: 1.2.3
+phenotype_only: True
+tool_specific_configuration_options:
   environment: local
-  version: 1.2.3
-  path_to_phen2gene_executable: /Users/yaseminbridges/phen2gene/Phen2Gene/phen2gene.py
-post_process:
-    # Score order should be specified to either ASCENDING or DESCENDING
-    # ASCENDING orders results with the lowest values ranked first
-    # DESCENDING orders results with the highest values ranked first
-    # NOTE when changing the score_name ensure the score_order is also correct
+  phen2gene_python_executable: phen2gene.py
+  post_process:
     score_order: descending
