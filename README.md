@@ -3,6 +3,8 @@ This is the Phen2Gene plugin for PhEval. Highly experimental. Do not use.
 
 ## Developers
 
+An example skeleton `config.yaml` has been provided (`pheval.phen2gene/config.yaml`) which should be be correctly filled and moved to the `input-dir` location.
+
 Warning, the pheval library currently needs to be included as a file reference in the toml file.
 
 ```
