@@ -1,6 +1,8 @@
 tool: phen2gene
 tool_version: 1.2.3
-phenotype_only: True
+variant_analysis: False
+gene_analysis: True
+disease_analysis: False
 tool_specific_configuration_options:
   environment: local
   phen2gene_python_executable: phen2gene.py
