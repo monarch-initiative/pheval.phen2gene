@@ -17,14 +17,16 @@ def prepare_phen2gene_commands(
     data_dir: Path,
     raw_results_dir: Path,
 ):
-    """Prepare commands to run Phen2Gene."""
-    phenopacket_dir = Path(testdata_dir).joinpath(
-        [
-            directory
-            for directory in os.listdir(str(testdata_dir))
-            if "phenopacket" in str(directory)
-        ][0]
-    )
+    """
+    Prepare commands to run Phen2Gene.
+    Args:
+        config (Phen2GeneToolSpecificConfigurations): Phen2Gene tool configurations
+        tool_input_commands_dir (Path): Path to the tool input commands directory.
+        testdata_dir (Path): Path to the testdata directory.
+        data_dir (Path): Path to the data directory.
+        raw_results_dir (Path): Path to the directory to write raw results.
+    """
+    phenopacket_dir = Path(testdata_dir).joinpath("phenopackets")
     prepare_commands(
         environment=config.environment,
         file_prefix=os.path.basename(testdata_dir),
@@ -40,7 +42,12 @@ def prepare_phen2gene_commands(
 
 
 def run_phen2gene_local(testdata_dir: Path, tool_input_commands_dir: Path):
-    """Run Phen2Gene locally."""
+    """
+    Run Phen2Gene locally.
+    Args:
+        testdata_dir (Path): Path to the testdata directory.
+        tool_input_commands_dir (Path): Path to the directory containing tool input commands file.
+    """
     batch_file = [
         file
         for file in all_files(tool_input_commands_dir)
@@ -54,7 +61,13 @@ def run_phen2gene_local(testdata_dir: Path, tool_input_commands_dir: Path):
 
 
 def read_docker_batch(batch_file: Path) -> [str]:
-    """Read docker batch file of Phen2Gene commands."""
+    """
+    Read docker batch file of Phen2Gene commands.
+    Args:
+        batch_file (Path): Path to the batch file of Phen2Gene commands.
+    Returns:
+        List[str]: List of docker commands for Phen2Gene.
+    """
     with open(batch_file) as batch:
         commands = batch.readlines()
     batch.close()
@@ -63,12 +76,26 @@ def read_docker_batch(batch_file: Path) -> [str]:
 
 @dataclass
 class DockerMounts:
+    """
+    Mount points for Docker containers.
+    Args:
+        results_dir (str): Path to the results directory.
+        input_dir (str): Path to the input directory.
+    """
+
     results_dir: str
     input_dir: str
 
 
 def mount_docker(output_dir: Path, input_dir: Path) -> DockerMounts:
-    """Create Docker mounts for volumes."""
+    """
+    Create Docker mounts for volumes.
+    Args:
+        output_dir (Path): Path to the output directory.
+        input_dir (Path): Path to the input directory.
+    Returns:
+        DockerMounts: Mount points for docker containers.
+    """
     results_dir = f"{output_dir}{os.sep}:/phen2gene-results"
     input_dir = f"{input_dir}{os.sep}:/phen2gene-data"
     return DockerMounts(results_dir=results_dir, input_dir=input_dir)
@@ -77,7 +104,14 @@ def mount_docker(output_dir: Path, input_dir: Path) -> DockerMounts:
 def run_phen2gene_docker(
     input_dir: Path, testdata_dir: Path, tool_input_commands_dir: Path, raw_results_dir: Path
 ):
-    """Run Phen2Gene with docker"""
+    """
+    Run Phen2Gene with docker.
+    Args:
+        input_dir (Path): Path to the input directory.
+        testdata_dir (Path): Path to the test data directory.
+        tool_input_commands_dir (Path): Path to the tool input commands directory.
+        raw_results_dir (Path): Path to the raw results directory.
+    """
     client = docker.from_env()
     batch_file = [
         file
@@ -109,7 +143,15 @@ def run_phen2gene(
     tool_input_commands_dir: Path,
     raw_results_dir: Path,
 ):
-    """Run Phen2Gene."""
+    """
+    Run Phen2Gene.
+    Args:
+        config (Phen2GeneToolSpecificConfigurations): Phen2Gene tool configurations.
+        input_dir (Path): Path to the input directory.
+        testdata_dir (Path): Path to the test data directory.
+        tool_input_commands_dir (Path): Path to the tool input commands directory.
+        raw_results_dir (Path): Path to the raw results directory.
+    """
     if config.environment == "docker":
         run_phen2gene_docker(
             input_dir=input_dir,

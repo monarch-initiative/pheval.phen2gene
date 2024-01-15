@@ -7,7 +7,13 @@ from pheval_phen2gene.tool_specific_configuration_parser import Phen2GeneToolSpe
 def post_process_results_format(
     raw_results_dir: Path, output_dir: Path, config: Phen2GeneToolSpecificConfigurations
 ):
-    """Create pheval gene result from Phen2Gene tsv output."""
+    """
+    Create pheval gene result from Phen2Gene tsv output.
+    Args:
+        raw_results_dir (Path): Path to the raw results directory.
+        output_dir (Path): Path to the output directory.
+        config (Phen2GeneToolSpecificConfigurations): Phen2Gene tool configurations.
+    """
     print("...creating pheval gene results format...")
     create_standardised_results(
         results_dir=raw_results_dir,

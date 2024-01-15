@@ -3,15 +3,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-import click
-from pheval.prepare.custom_exceptions import MutuallyExclusiveOptionError
 from pheval.utils.file_utils import all_files
 from pheval.utils.phenopacket_utils import PhenopacketUtil, phenopacket_reader
 
 
 @dataclass
 class Phen2GeneCommandLineArguments:
-    """Minimal arguments required to run Phen2Gene on the command line."""
+    """
+    Minimal arguments required to run Phen2Gene on the command line.
+    Args:
+        path_to_phen2gene_dir (Path): Path to the Phen2Gene directory
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        input_file_path (Path): Path to the input file.
+        hpo_ids (List[str]): List of hpo ids.
+    """
 
     path_to_phen2gene_dir: Path
     output_dir: Path
@@ -22,7 +28,14 @@ class Phen2GeneCommandLineArguments:
 
 @dataclass
 class Phen2GeneDockerArguments:
-    """Minimal arguments required to run Phen2Gene on docker."""
+    """
+    Minimal arguments required to run Phen2Gene on docker.
+    Args:
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        input_file_path (Path): Path to the input file
+        hpo_ids (List[str]): List of hpo ids.
+    """
 
     output_dir: Path
     output_file_name: Path
@@ -37,7 +50,17 @@ def create_command_line_arguments(
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
 ) -> Phen2GeneCommandLineArguments:
-    """Create command line arguments required for Phen2Gene."""
+    """
+    Create command line arguments required for Phen2Gene.
+    Args:
+        path_to_phen2gene_dir (Path): Path to the Phen2Gene directory.
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        input_file_path (Path or None): Path to the input file.
+        phenopacket_path (Path or None): Path to the phenopacket.
+    Returns:
+        Phen2GeneCommandLineArguments: Arguments required to run Phen2Gene.
+    """
     if phenopacket_path is None:
         return Phen2GeneCommandLineArguments(
             path_to_phen2gene_dir=path_to_phen2gene_dir,
@@ -63,7 +86,14 @@ def create_docker_arguments(
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
 ) -> Phen2GeneDockerArguments:
-    """Create the docker arguments required for Phen2Gene."""
+    """
+    Create the docker arguments required for Phen2Gene.
+    Args:
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        input_file_path (Path or None): Path to the input file.
+        phenopacket_path (Path or None): Path to the phenopacket.
+    """
     if phenopacket_path is None:
         return Phen2GeneDockerArguments(
             output_dir=output_dir,
@@ -82,15 +112,25 @@ def create_docker_arguments(
 
 
 class CommandWriter:
-    """Write all commands to a text file."""
+    """Class for writing all commands to a text file."""
 
     def __init__(self, output_file: Path):
+        """
+        Initialise the CommandWriter class.
+        Args:
+            output_file (Path): Path to the output file to write commands.
+        """
         self.file = open(output_file, "w")
 
     def write_local_command(
-        self, command_arguments: Phen2GeneCommandLineArguments, data_dir
+        self, command_arguments: Phen2GeneCommandLineArguments, data_dir: Path
     ) -> None:
-        """Write a Phen2Gene command to run locally."""
+        """
+        Write a Phen2Gene command to run locally.
+        Args:
+            command_arguments (Phen2GeneCommandLineArguments): Phen2Gene command line arguments.
+            data_dir (Path): Path to Phen2Gene input data directory.
+        """
         try:
             if command_arguments.hpo_ids is None:
                 # TODO create this as a list instead in another method and then do "\n".join here
@@ -126,7 +166,11 @@ class CommandWriter:
             print("Error writing ", self.file)
 
     def write_docker_command(self, command_arguments: Phen2GeneDockerArguments) -> None:
-        """Write a Phen2Gene command to run with docker."""
+        """
+        Write a Phen2Gene command to run with docker.
+        Args:
+            command_arguments (Phen2GeneDockerArguments): Arguments passed to docker command for Phen2Gene.
+        """
         try:
             if command_arguments.hpo_ids is None:
                 self.file.write(
@@ -156,6 +200,7 @@ class CommandWriter:
             print("Error writing ", self.file)
 
     def close(self):
+        """Close the file."""
         self.file.close()
 
 
@@ -168,7 +213,17 @@ def write_single_local_command(
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
 ) -> None:
-    """Write a single command locally when given either a phenopacket or prepared input file."""
+    """
+    Write a single command locally when given either a phenopacket or prepared input file.
+    Args:
+        path_to_phen2gene_dir (Path): Path to the Phen2Gene directory.
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        data_dir (Path): Path to the Phen2Gene data directory.
+        command_writer (CommandWriter): CommandWriter instance.
+        input_file_path (Path or None): Path to the input file.
+        phenopacket_path (Path or None): Path to the phenopacket.
+    """
     arguments = create_command_line_arguments(
         path_to_phen2gene_dir=path_to_phen2gene_dir,
         output_dir=output_dir,
@@ -186,7 +241,15 @@ def write_single_docker_command(
     input_file_path: Path or None = None,
     phenopacket_path: Path or None = None,
 ) -> None:
-    """Write a docker command when given either a phenopacket or prepared input file."""
+    """
+    Write a docker command when given either a phenopacket or prepared input file.
+    Args:
+        output_dir (Path): Path to the output directory.
+        output_file_name (Path): Name of the output file.
+        command_writer (CommandWriter): CommandWriter instance.
+        input_file_path (Path or None): Path to the input file.
+        phenopacket_path (Path or None): Path to the phenopacket.
+    """
     arguments = create_docker_arguments(
         output_dir=output_dir,
         output_file_name=output_file_name,
@@ -204,7 +267,16 @@ def write_local_commands(
     phenopacket_dir: Path or None,
     input_dir: Path or None,
 ) -> None:
-    """Write all commands to run locally when given either phenopacket or input directory."""
+    """
+    Write all commands to run locally when given either directory containing phenopackets or input files.
+    Args:
+        path_to_phen2gene_dir (Path): Path to the Phen2Gene directory.
+        command_file_path (Path): Path to the file to write commands.
+        output_dir (Path): Path to the output directory.
+        data_dir (Path): Path to the Phen2Gene data directory.
+        phenopacket_dir (Path or None): Path to the phenopacket directory.
+        input_dir (Path or None): Path to the input file directory.
+    """
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
     command_writer = CommandWriter(command_file_path)
     for input_file in input_files:
@@ -232,9 +304,16 @@ def write_docker_commands(
     phenopacket_dir: Path or None,
     input_dir: Path or None,
 ) -> None:
+    """
+    Write all commands to run with docker when given either directory containing phenopackets or input files.
+    Args:
+        command_file_path (Path): Path to the file to write commands.
+        output_dir (Path): Path to the output directory.
+        phenopacket_dir (Path or None): Path to the phenopacket directory.
+        input_dir (Path or None): Path to the input file directory.
+    """
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
     command_writer = CommandWriter(command_file_path)
-    """Write all commands to run with docker when given either phenopacket or input directory."""
     for input_file in input_files:
         write_single_docker_command(
             output_dir=output_dir,
@@ -259,7 +338,18 @@ def prepare_commands(
     input_dir: Path or None = None,
     path_to_phen2gene_dir: Path or None = None,
 ) -> None:
-    """Prepare all commands to run with Phen2Gene."""
+    """
+    Prepare all commands to run with Phen2Gene.
+    Args:
+        environment (str): Environment to run Phen2Gene commands.
+        file_prefix (str): Prefix for command file path.
+        output_dir (Path): Path to the directory to write command file.
+        results_dir (Path): Path to the directory to write Phen2Gene results.
+        data_dir (Path): Path to the Phen2Gene data directory.
+        phenopacket_dir (Path or None): Path to the phenopacket directory.
+        input_dir (Path or None): Path to the input file directory.
+        path_to_phen2gene_dir (Path or None): Path to the Phen2Gene directory.
+    """
     command_file_path = output_dir.joinpath(f"{file_prefix}-phen2gene-batch.txt")
     if environment == "local":
         write_local_commands(
@@ -277,94 +367,3 @@ def prepare_commands(
             phenopacket_dir=phenopacket_dir,
             input_dir=input_dir,
         )
-
-
-@click.command("prepare-commands")
-@click.option(
-    "--environment",
-    "-e",
-    required=False,
-    default="local",
-    show_default=True,
-    help="Environment to run commands.",
-    type=click.Choice(["local", "docker"]),
-)
-@click.option(
-    "--file-prefix",
-    "-f",
-    required=True,
-    metavar=str,
-    type=str,
-    help="Prefix for output batch file.",
-)
-@click.option(
-    "--output-dir",
-    "-o",
-    required=True,
-    metavar="PATH",
-    type=Path,
-    help="Directory for batch file to be output.",
-)
-@click.option(
-    "--results-dir",
-    "-r",
-    required=True,
-    metavar="PATH",
-    type=Path,
-    help="Relative path for results to be output by Phen2gene.",
-)
-@click.option(
-    "--data-dir",
-    "-d",
-    required=True,
-    metavar="PATH",
-    type=Path,
-    help="Path to Phen2Gene data directory.",
-)
-@click.option(
-    "--phenopacket-dir",
-    "-p",
-    required=False,
-    metavar="PATH",
-    help="Path to phenopacket directory.",
-    cls=MutuallyExclusiveOptionError,
-    mutually_exclusive=["input_dir"],
-)
-@click.option(
-    "--input-dir",
-    "-i",
-    required=False,
-    metavar="PATH",
-    help="Path to input text file directory.",
-    cls=MutuallyExclusiveOptionError,
-    mutually_exclusive=["phenopacket_dir"],
-)
-@click.option(
-    "--phen2gene-py",
-    "-py",
-    required=False,
-    metavar="Path",
-    type=Path,
-    help="Path to Phen2Gene python executable - not required if running with docker.",
-)
-def prepare_commands_command(
-    environment: str,
-    file_prefix: str,
-    output_dir: Path,
-    results_dir: Path,
-    data_dir: Path,
-    phenopacket_dir: Path or None = None,
-    input_dir: Path or None = None,
-    phen2gene_py: Path or None = None,
-):
-    output_dir.joinpath("tool_input_commands").mkdir(parents=True, exist_ok=True)
-    prepare_commands(
-        environment,
-        file_prefix,
-        output_dir.joinpath("tool_input_commands"),
-        results_dir,
-        data_dir,
-        phenopacket_dir,
-        input_dir,
-        phen2gene_py,
-    )
