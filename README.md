@@ -1,38 +1,73 @@
 # Phen2Gene Runner for PhEval
-This is the Phen2Gene plugin for PhEval. Highly experimental. Do not use.
+This is the Phen2Gene plugin for PhEval. With this plugin, you can leverage the gene prioritisation tool, Phen2Gene, to run the PhEval pipeline seamlessly. The setup process for running the full PhEval Makefile pipeline differs from setting up for a single run. The Makefile pipeline creates directory structures for corpora and configurations to handle multiple run configurations. Detailed instructions on setting up the appropriate directory layout, including the input directory and test data directory, can be found here.
 
-## Developers
+## Installation
 
-An example skeleton `config.yaml` has been provided (`pheval.phen2gene/config.yaml`) which should be be correctly filled and moved to the `input-dir` location.
+Clone the pheval.phen2gene repo and set up the poetry environment:
 
-Warning, the pheval library currently needs to be included as a file reference in the toml file.
-
-```
-poetry add /Users/yaseminbridges/Documents/GitHub/pheval
-
-poetry lock
-
-poetry install
-```
-
-This will change when pheval is published on pypi.
-
-To install the Phen2Gene plugin:
-
-``` 
+```sh
 git clone https://github.com/yaseminbridges/pheval.phen2gene.git
 
-cd pheval.phen2gene/
+cd pheval.phen2gene
 
-poetry add /path/to/local/pheval
-
-poetry lock
+poetry shell
 
 poetry install
-```
-
-To install PhEval:
 
 ```
-git clone https://github.com/monarch-initiative/pheval.git 
+
+## Configuring a *single* run
+
+### Setting up the input directory
+
+A config.yaml should be located in the input directory and formatted like so:
+
+```yaml
+tool: phen2gene
+tool_version: 1.2.3
+variant_analysis: False
+gene_analysis: True
+disease_analysis: False
+tool_specific_configuration_options:
+  environment: local
+  phen2gene_python_executable: phen2gene.py
+  post_process:
+    score_order: descending
+```
+
+The bare minimum fields are filled to give an idea on the requirements, as Phen2Gene is gene prioritisation tool, only `gene_analysis` should be set to `True` in the config. An example config has been provided pheval.phen2gene/config.yaml.
+
+The Phen2Gene input data directory should also be located in the input directory - or a symlink pointing to the location in a directory named `lib`.
+
+The `phen2gene_python_executable` points to the name of the Phen2Gene python executable file which should also be located in the input directory.
+
+The overall structure of the input directory should look something like so (omitting files in the `lib` for clarity):
+
+```tree
+.
+├── config.yaml
+├── lib
+└── phen2gene.py
+```
+### Setting up the testdata directory
+
+The Phen2Gene plugin for PhEval accepts phenopackets as an input for running Phen2Gene. 
+
+The testdata directory should include a subdirectory named phenopackets:
+
+```tree
+├── testdata_dir
+   └── phenopackets
+```
+
+## Run command
+
+Once the testdata and input directories are correctly configured for the run, the pheval run command can be executed.
+
+```sh
+pheval run --input-dir /path/to/input_dir \
+--testdata-dir /path/to/testdata_dir \
+--runner phen2genephevalrunner \
+--output-dir /path/to/output_dir \
+--version 1.2.3
 ```
