@@ -1,4 +1,5 @@
 """Phen2Gene Runner"""
+
 from dataclasses import dataclass
 from pathlib import Path
 

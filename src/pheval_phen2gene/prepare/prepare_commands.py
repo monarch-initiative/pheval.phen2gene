@@ -280,20 +280,24 @@ def write_local_commands(
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
     command_writer = CommandWriter(command_file_path)
     for input_file in input_files:
-        write_single_local_command(
-            path_to_phen2gene_dir=path_to_phen2gene_dir,
-            output_dir=output_dir,
-            output_file_name=Path(input_file.stem),
-            command_writer=command_writer,
-            input_file_path=input_file,
-            data_dir=data_dir,
-        ) if phenopacket_dir is None else write_single_local_command(
-            path_to_phen2gene_dir=path_to_phen2gene_dir,
-            output_dir=output_dir,
-            output_file_name=Path(input_file.stem),
-            command_writer=command_writer,
-            phenopacket_path=input_file,
-            data_dir=data_dir,
+        (
+            write_single_local_command(
+                path_to_phen2gene_dir=path_to_phen2gene_dir,
+                output_dir=output_dir,
+                output_file_name=Path(input_file.stem),
+                command_writer=command_writer,
+                input_file_path=input_file,
+                data_dir=data_dir,
+            )
+            if phenopacket_dir is None
+            else write_single_local_command(
+                path_to_phen2gene_dir=path_to_phen2gene_dir,
+                output_dir=output_dir,
+                output_file_name=Path(input_file.stem),
+                command_writer=command_writer,
+                phenopacket_path=input_file,
+                data_dir=data_dir,
+            )
         )
     command_writer.close()
 
@@ -315,16 +319,20 @@ def write_docker_commands(
     input_files = all_files(phenopacket_dir) if input_dir is None else all_files(input_dir)
     command_writer = CommandWriter(command_file_path)
     for input_file in input_files:
-        write_single_docker_command(
-            output_dir=output_dir,
-            output_file_name=Path(input_file.stem),
-            command_writer=command_writer,
-            phenopacket_path=input_file,
-        ) if input_dir is None else write_single_docker_command(
-            output_dir=output_dir,
-            output_file_name=Path(input_file.stem),
-            command_writer=command_writer,
-            input_file_path=input_file,
+        (
+            write_single_docker_command(
+                output_dir=output_dir,
+                output_file_name=Path(input_file.stem),
+                command_writer=command_writer,
+                phenopacket_path=input_file,
+            )
+            if input_dir is None
+            else write_single_docker_command(
+                output_dir=output_dir,
+                output_file_name=Path(input_file.stem),
+                command_writer=command_writer,
+                input_file_path=input_file,
+            )
         )
 
 
