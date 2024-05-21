@@ -6,7 +6,7 @@ This is the Phen2Gene plugin for PhEval. With this plugin, you can leverage the 
 Clone the pheval.phen2gene repo and set up the poetry environment:
 
 ```sh
-git clone https://github.com/yaseminbridges/pheval.phen2gene.git
+git clone https://github.com/monarch-initiative/pheval.phen2gene.git
 
 cd pheval.phen2gene
 
@@ -14,6 +14,12 @@ poetry shell
 
 poetry install
 
+```
+
+or install with PyPi:
+
+```sh
+pip install pheval.phen2gene
 ```
 
 ## Configuring a *single* run
