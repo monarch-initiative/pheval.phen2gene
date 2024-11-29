@@ -36,7 +36,7 @@ gene_analysis: True
 disease_analysis: False
 tool_specific_configuration_options:
   environment: local
-  phen2gene_python_executable: phen2gene.py
+  phen2gene_python_executable: Phen2Gene/phen2gene.py
   post_process:
     score_order: descending
 ```
@@ -45,7 +45,7 @@ The bare minimum fields are filled to give an idea on the requirements, as Phen2
 
 The Phen2Gene input data directory should also be located in the input directory - or a symlink pointing to the location in a directory named `lib`.
 
-The `phen2gene_python_executable` points to the name of the Phen2Gene python executable file which should also be located in the input directory.
+The `phen2gene_python_executable` points to the name of the Phen2Gene python executable file - this is usually located within the `Phen2Gene` directory within the input directory.
 
 The overall structure of the input directory should look something like so (omitting files in the `lib` for clarity):
 
@@ -53,7 +53,28 @@ The overall structure of the input directory should look something like so (omit
 .
 ├── config.yaml
 ├── lib
-└── phen2gene.py
+│   ├── Knowledgebase
+│   ├── lib
+│   ├── phen2gene.py
+│   ├── skewness
+│   └── weights
+└── Phen2Gene
+    ├── accuracy.py
+    ├── accuracy.sh
+    ├── calcs
+    ├── Dockerfile
+    ├── environment.yml
+    ├── example
+    ├── generate_ranking_data.py
+    ├── getbenchmark.sh
+    ├── lib
+    ├── LICENSE
+    ├── phen2gene.py
+    ├── README.md
+    ├── requirements.txt
+    ├── runtest.sh
+    ├── setup.sh
+    └── test
 ```
 ### Setting up the testdata directory
 
