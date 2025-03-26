@@ -25,7 +25,7 @@ def extract_gene_results(
             pl.col("Gene").alias("gene_symbol"),
             pl.col("Gene")
             .map_elements(gene_identifier_updator.find_identifier, return_dtype=pl.String)
-            .alias("gene_id"),
+            .alias("gene_identifier"),
             pl.col("Score").alias("score"),
         ]
     )
