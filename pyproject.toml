@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "pheval-phen2gene"
-version = "0.1.4"
+version = "0.2.0"
 description = ""
 authors = ["Yasemin Bridges <y.bridges@qmul.ac.uk>"]
 readme = "README.md"
 packages = [{include = "pheval_phen2gene", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0.0"
+python = ">=3.10,<4.0.0"
 click = "^8.1.3"
 pandas = "^1.5.2"
 oaklib = ">=0.5.6"
@@ -15,7 +15,7 @@ docker = "^6.0.1"
 matplotlib = "^3.7.1"
 numpy = "^1.24.2"
 wheel = "^0.40.0"
-pheval = "^0.4.0"
+pheval = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"

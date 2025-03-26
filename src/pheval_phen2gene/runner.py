@@ -54,5 +54,6 @@ class Phen2GenePhEvalRunner(PhEvalRunner):
         post_process_results_format(
             raw_results_dir=self.raw_results_dir,
             output_dir=self.output_dir,
+            phenopacket_dir=self.testdata_dir.joinpath("phenopackets"),
             config=tool_specific_configurations,
         )
