@@ -1,14 +1,11 @@
 import unittest
 
-import pandas as pd
-from pheval.post_processing.post_processing import PhEvalGeneResult
-from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_hgnc_dict
+import polars as pl
+from pheval.utils.phenopacket_utils import GeneIdentifierUpdater, create_gene_identifier_map
 
-from pheval_phen2gene.post_process.post_process_results_format import (
-    PhEvalGeneResultFromPhen2GeneTsvCreator,
-)
+from pheval_phen2gene.post_process.post_process_results_format import extract_gene_results
 
-example_phen2gene_result = pd.DataFrame(
+example_phen2gene_result = pl.DataFrame(
     [
         {"Rank": 1, "Gene": "GCDH", "ID": "2639", "Score": 1.0, "Status": "SeedGene"},
         {"Rank": 2, "Gene": "ETFB", "ID": "2109", "Score": 0.298386, "Status": "SeedGene"},
@@ -17,42 +14,25 @@ example_phen2gene_result = pd.DataFrame(
 )
 
 
-class TestPhEvalGeneResultFromPhen2GeneTsvCreator(unittest.TestCase):
+class TestExtractGeneResult(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.phen2gene_result = PhEvalGeneResultFromPhen2GeneTsvCreator(
-            phen2gene_tsv_result=example_phen2gene_result,
-            gene_identifier_updator=GeneIdentifierUpdater(
-                hgnc_data=create_hgnc_dict(), gene_identifier="ensembl_id"
-            ),
+        cls.gene_identifier_updator = GeneIdentifierUpdater(
+            identifier_map=create_gene_identifier_map(), gene_identifier="ensembl_id"
         )
 
-    def test_find_gene_symbol(self):
-        self.assertEqual(
-            self.phen2gene_result._find_gene_symbol(example_phen2gene_result.iloc[0]), "GCDH"
-        )
-
-    def test_find_ensembl_identifier(self):
-        self.assertEqual(
-            self.phen2gene_result._find_ensembl_identifier(example_phen2gene_result.iloc[0]),
-            "ENSG00000105607",
-        )
-
-    def test_find_relevant_score(self):
-        self.assertEqual(
-            self.phen2gene_result._find_relevant_score(example_phen2gene_result.iloc[0]), 1.0
-        )
-
-    def test_extract_pheval_gene_requirements(self):
-        self.assertEqual(
-            self.phen2gene_result.extract_pheval_gene_requirements(),
-            [
-                PhEvalGeneResult(gene_symbol="GCDH", gene_identifier="ENSG00000105607", score=1.0),
-                PhEvalGeneResult(
-                    gene_symbol="ETFB", gene_identifier="ENSG00000105379", score=0.2984
-                ),
-                PhEvalGeneResult(
-                    gene_symbol="ETFA", gene_identifier="ENSG00000140374", score=0.287
-                ),
-            ],
+    def test_extract_gene_results(self):
+        self.assertTrue(
+            extract_gene_results(
+                phen2gene_result=example_phen2gene_result,
+                gene_identifier_updator=self.gene_identifier_updator,
+            ).equals(
+                pl.DataFrame(
+                    [
+                        {"gene_symbol": "GCDH", "gene_id": "ENSG00000105607", "score": 1.0},
+                        {"gene_symbol": "ETFB", "gene_id": "ENSG00000105379", "score": 0.298386},
+                        {"gene_symbol": "ETFA", "gene_id": "ENSG00000140374", "score": 0.286989},
+                    ]
+                )
+            )
         )
