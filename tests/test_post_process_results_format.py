@@ -29,9 +29,9 @@ class TestExtractGeneResult(unittest.TestCase):
             ).equals(
                 pl.DataFrame(
                     [
-                        {"gene_symbol": "GCDH", "gene_id": "ENSG00000105607", "score": 1.0},
-                        {"gene_symbol": "ETFB", "gene_id": "ENSG00000105379", "score": 0.298386},
-                        {"gene_symbol": "ETFA", "gene_id": "ENSG00000140374", "score": 0.286989},
+                        {"gene_symbol": "GCDH", "gene_identifier": "ENSG00000105607", "score": 1.0},
+                        {"gene_symbol": "ETFB", "gene_identifier": "ENSG00000105379", "score": 0.298386},
+                        {"gene_symbol": "ETFA", "gene_identifier": "ENSG00000140374", "score": 0.286989},
                     ]
                 )
             )
