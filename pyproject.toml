@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pheval-phen2gene"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 authors = ["Yasemin Bridges <y.bridges@qmul.ac.uk>"]
 readme = "README.md"
